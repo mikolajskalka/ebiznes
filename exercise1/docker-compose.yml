@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: java-hello-world-app
+    container_name: java-hello-world-app
+    volumes:
+      - ./:/app
+    environment:
+      - GRADLE_USER_HOME=/app/.gradle # Cache Gradle dependencies

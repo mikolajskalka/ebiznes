@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'io.github.mikolajskalka'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // SQLite JDBC driver
+    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+application {
+    mainClassName = 'io.github.mikolajskalka.Main'
+}
