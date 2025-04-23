@@ -1,7 +1,5 @@
 # E-Biznes
 
-This repository contains solutions for exercises completed as part of the E-Business university course.
-
 To repozytorium zawiera rozwiązania zadań, które zostały wyknane jako część kursu E-biznez na Uniwersytecie Jagiellońskim.
 
 ## Zadanie 1: Docker
@@ -24,13 +22,13 @@ To repozytorium zawiera rozwiązania zadań, które zostały wyknane jako częś
 <details>
 <summary>Szczegóły</summary>
 
-- Ubuntu 24.04 base image
+- Ubuntu 24.04 obraz bazowy
 - Java 8 (OpenJDK)
 - Python 3.10
-- Kotlin (installed via SDKMAN)
+- Kotlin (zainstalowany za pomocą SDKMAN)
 - Gradle 4.10.3
 
-Kontener uruchamia prosą aplikację 'Hello World'.
+Kontener uruchamia prostą aplikację 'Hello World'.
 
 ### Uruchomienie
 
@@ -102,10 +100,10 @@ Aplikacja wystawia następujące endpointy API:
 - `DELETE /cart/:id` - Usuń produkt z koszyka o danym ID
 </details>
 
-## Exercise 3: Coming Soon
+## Zadanie 3: Kotlin
 
 <details>
-<summary>Show Details</summary>
+<summary>Szczegóły</summary>
 
-Details about Exercise 3 will be added soon.
+Wkrótce.
 </details>
