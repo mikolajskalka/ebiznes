@@ -6,15 +6,15 @@ To repozytorium zawiera rozwiązania zadań, które zostały wyknane jako częś
 
 ### Wymagania
 
-✅ 3.0 obraz Ubuntu z Pythonem w wersji 3.10 [Link to commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
+✅ 3.0 obraz Ubuntu z Pythonem w wersji 3.10 [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
 
-✅ 3.5 obraz Ubuntu:24.02 z Javą w wersji 8 oraz Kotlinem [Link to commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
+✅ 3.5 obraz Ubuntu:24.02 z Javą w wersji 8 oraz Kotlinem [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
 
-✅ 4.0 do powyższego należy dodać najnowszego Gradle’a oraz paczkę JDBC SQLite w ramach projektu na Gradle (build.gradle) [Link to commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
+✅ 4.0 do powyższego należy dodać najnowszego Gradle’a oraz paczkę JDBC SQLite w ramach projektu na Gradle (build.gradle) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
 
-✅ 4.5 stworzyć przykład typu HelloWorld oraz uruchomienie aplikacji przez CMD oraz gradle [Link to commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
+✅ 4.5 stworzyć przykład typu HelloWorld oraz uruchomienie aplikacji przez CMD oraz gradle [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
 
-✅ 5.0 dodać konfigurację docker-compose [Link to commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
+✅ 5.0 dodać konfigurację docker-compose [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
 
 **Kod:** [exercise1/](exercise1/)  
 **Demo:** [Link to video](https://youtu.be/iuURFd7Obcg)
@@ -55,15 +55,15 @@ docker pull mikolajskalka/java-hello-world-app:latest
 
 ### Wymagania
 
-✅ 3.0 Należy stworzyć kontroler do Produktów [Link to commit](https://github.com/mikolajskalka/ebiznes/commit/m1n2o3p)
+✅ 3.0 Należy stworzyć kontroler do Produktów [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/m1n2o3p)
 
-✅ 3.5 Do kontrolera należy stworzyć endpointy zgodnie z CRUD - dane pobierane z listy [Link to commit](https://github.com/mikolajskalka/ebiznes/commit/q4r5s6t)
+✅ 3.5 Do kontrolera należy stworzyć endpointy zgodnie z CRUD - dane pobierane z listy [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/q4r5s6t)
 
-✅ 4.0 Należy stworzyć kontrolery do Kategorii oraz Koszyka + endpointy zgodnie z CRUD [Link to commit](https://github.com/mikolajskalka/ebiznes/commit/u7v8w9x)
+✅ 4.0 Należy stworzyć kontrolery do Kategorii oraz Koszyka + endpointy zgodnie z CRUD [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/u7v8w9x)
 
-✅ 4.5 Należy aplikację uruchomić na dockerze (stworzyć obraz) oraz dodać skrypt uruchamiający aplikację via ngrok (nie podawać tokena ngroka w gotowym rozwiązaniu) [Link to future commit](#)
+✅ 4.5 Należy aplikację uruchomić na dockerze (stworzyć obraz) oraz dodać skrypt uruchamiający aplikację via ngrok (nie podawać tokena ngroka w gotowym rozwiązaniu) [Link do commita](#)
 
-✅ 5.0 Należy dodać konfigurację CORS dla dwóch hostów dla metod CRUD [Link to future commit](#)
+✅ 5.0 Należy dodać konfigurację CORS dla dwóch hostów dla metod CRUD [Link do commita](#)
 
 **Kod:** [exercise2/](exercise2/)  
 **Demo:** [Link to video](#)
@@ -89,15 +89,18 @@ Aplikacja będzie dostępna pod adresem: http://localhost:9000
 Aplikacja wystawia następujące endpointy API:
 - `GET /products` - Pobierz wszystkie produkty
 - `GET /products/:id` - Pobierz produkt o danym ID
+- `PUT /products/:id` - Zaktualizuj produkt o danym ID
 - `POST /products` - Dodaj nowy produkt
 - `DELETE /products/:id` - Usuń produkt o danym ID
 - `GET /categories` - Pobierz wszystkie kategorie
 - `GET /categories/:id` - Pobierz kategorię o danym ID
+- `PUT /categories/:id` - Zaktualizuj kategorię o danym ID
 - `POST /categories` - Dodaj nową kategorię
 - `DELETE /categories/:id` - Usuń kategorię o danym ID
-- `GET /cart` - Pobierz zawartość koszyka
+- `GET /cart/:id` - Pobierz zawartość koszyka od danym ID
+- `PUT /cart/:id` - Zaktualizuj produkt w koszyku o danym ID
 - `POST /cart` - Dodaj produkt do koszyka
-- `DELETE /cart/:id` - Usuń produkt z koszyka o danym ID
+- `DELETE /cart/:id` - Usuń koszyk o danym ID
 </details>
 
 ## Zadanie 3: Kotlin
