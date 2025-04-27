@@ -107,15 +107,15 @@ Aplikacja wystawia następujące endpointy API:
 
 ### Wymagania
 
-✅ 3.0 Należy stworzyć aplikację kliencką w Kotlinie we frameworku Ktor, która pozwala na przesyłanie wiadomości na platformę Discord [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+✅ 3.0 Należy stworzyć aplikację kliencką w Kotlinie we frameworku Ktor, która pozwala na przesyłanie wiadomości na platformę Discord [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/948591fa81062a2fde763f87451700fc3a555b98)
 
-✅ 3.5 Aplikacja jest w stanie odbierać wiadomości użytkowników z platformy Discord skierowane do aplikacji (bota) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+✅ 3.5 Aplikacja jest w stanie odbierać wiadomości użytkowników z platformy Discord skierowane do aplikacji (bota) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/948591fa81062a2fde763f87451700fc3a555b98)
 
-✅ 4.0 Zwróci listę kategorii na określone żądanie użytkownika [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+✅ 4.0 Zwróci listę kategorii na określone żądanie użytkownika [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/948591fa81062a2fde763f87451700fc3a555b98)
 
-✅ 4.5 Zwróci listę produktów wg żądanej kategorii [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+✅ 4.5 Zwróci listę produktów wg żądanej kategorii [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/948591fa81062a2fde763f87451700fc3a555b98)
 
-❌ 5.0 Aplikacja obsłuży dodatkowo jedną z platform: Slack, Messenger, Webex [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+❌ 5.0 Aplikacja obsłuży dodatkowo jedną z platform: Slack, Messenger, Webex 
 
 **Kod:** [exercise3/](exercise3/)  
 **Demo:** [Link to video](https://youtu.be/FQpDc7ekEng)
