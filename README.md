@@ -55,15 +55,15 @@ docker pull mikolajskalka/java-hello-world-app:latest
 
 ### Wymagania
 
-✅ 3.0 Należy stworzyć kontroler do Produktów [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/m1n2o3p)
+✅ 3.0 Należy stworzyć kontroler do Produktów [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/042876bbf19eb93206001a15830ccfadb92b9614)
 
-✅ 3.5 Do kontrolera należy stworzyć endpointy zgodnie z CRUD - dane pobierane z listy [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/q4r5s6t)
+✅ 3.5 Do kontrolera należy stworzyć endpointy zgodnie z CRUD - dane pobierane z listy [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/5d0143b636a8c70979afa045fb846453ff6bd6a1)
 
-✅ 4.0 Należy stworzyć kontrolery do Kategorii oraz Koszyka + endpointy zgodnie z CRUD [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/u7v8w9x)
+✅ 4.0 Należy stworzyć kontrolery do Kategorii oraz Koszyka + endpointy zgodnie z CRUD [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/4ba6ce4895430f227875005a57084a6e0225d574)
 
-✅ 4.5 Należy aplikację uruchomić na dockerze (stworzyć obraz) oraz dodać skrypt uruchamiający aplikację via ngrok (nie podawać tokena ngroka w gotowym rozwiązaniu) [Link do commita](#)
+✅ 4.5 Należy aplikację uruchomić na dockerze (stworzyć obraz) oraz dodać skrypt uruchamiający aplikację via ngrok (nie podawać tokena ngroka w gotowym rozwiązaniu) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/a12303009787a739c76e3a655036dd2b87968d74)
 
-✅ 5.0 Należy dodać konfigurację CORS dla dwóch hostów dla metod CRUD [Link do commita](#)
+✅ 5.0 Należy dodać konfigurację CORS dla dwóch hostów dla metod CRUD [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/a12303009787a739c76e3a655036dd2b87968d74)
 
 **Kod:** [exercise2/](exercise2/)  
 **Demo:** [Link to video](#)
