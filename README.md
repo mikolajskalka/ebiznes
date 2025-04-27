@@ -105,8 +105,49 @@ Aplikacja wystawia następujące endpointy API:
 
 ## Zadanie 3: Kotlin
 
+### Wymagania
+
+✅ 3.0 Należy stworzyć aplikację kliencką w Kotlinie we frameworku Ktor, która pozwala na przesyłanie wiadomości na platformę Discord [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+
+✅ 3.5 Aplikacja jest w stanie odbierać wiadomości użytkowników z platformy Discord skierowane do aplikacji (bota) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+
+✅ 4.0 Zwróci listę kategorii na określone żądanie użytkownika [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+
+✅ 4.5 Zwróci listę produktów wg żądanej kategorii [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+
+❌ 5.0 Aplikacja obsłuży dodatkowo jedną z platform: Slack, Messenger, Webex [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/adding_discord_bot)
+
+**Kod:** [exercise3/](exercise3/)  
+**Demo:** [Link to video](https://youtu.be/FQpDc7ekEng)
+
 <details>
 <summary>Szczegóły</summary>
 
-Wkrótce.
+Aplikacja została zbudowana w języku Kotlin z użyciem następujących technologii:
+- Framework Ktor do tworzenia API RESTowych
+- JDA (Java Discord API) do komunikacji z platformą Discord
+- Docker do konteneryzacji aplikacji
+
+### Funkcjonalności
+
+Bot Discord obsługuje następujące komendy:
+- `!categories` - Wyświetla listę wszystkich kategorii produktów
+- `!products <category_id>` - Wyświetla produkty z wybranej kategorii
+- `!help` - Wyświetla listę dostępnych komend
+
+### Uruchomienie aplikacji
+
+Aby uruchomić aplikację, należy ustawić odpowiednie zmienne środowiskowe:
+- `DISCORD_TOKEN` - Token bota Discord
+
+```bash
+# Uruchomienie za pomocą Docker Compose
+cd exercise3
+docker compose up
+```
+
+Po uruchomieniu, aplikacja będzie dostępna pod adresem http://localhost:8080 i obsługuje następujące endpointy:
+- `GET /health` - Sprawdzenie stanu aplikacji
+- `GET /send-discord-message?channelId=<id>&message=<text>` - Wysłanie wiadomości na kanał Discord
+
 </details>

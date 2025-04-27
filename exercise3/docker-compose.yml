@@ -1,0 +1,10 @@
+services:
+  discord-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DISCORD_TOKEN=${discord_token:-discord_token}
+    restart: unless-stopped
