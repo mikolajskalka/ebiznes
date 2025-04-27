@@ -1,0 +1,25 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+
+# Product endpoints
+GET     /api/products                  controllers.ProductController.index()
+GET     /api/products/:id              controllers.ProductController.show(id: Long)
+POST    /api/products                  controllers.ProductController.create()
+PUT     /api/products/:id              controllers.ProductController.update(id: Long)
+DELETE  /api/products/:id              controllers.ProductController.delete(id: Long)
+
+# Category endpoints
+GET     /api/categories                controllers.CategoryController.index()
+GET     /api/categories/:id            controllers.CategoryController.show(id: Long)
+POST    /api/categories                controllers.CategoryController.create()
+PUT     /api/categories/:id            controllers.CategoryController.update(id: Long)
+DELETE  /api/categories/:id            controllers.CategoryController.delete(id: Long)
+
+# Cart endpoints
+GET     /api/carts                     controllers.CartController.index()
+GET     /api/carts/:id                 controllers.CartController.show(id: Long)
+POST    /api/carts                     controllers.CartController.create()
+PUT     /api/carts/:id                 controllers.CartController.update(id: Long)
+DELETE  /api/carts/:id                 controllers.CartController.delete(id: Long)
+POST    /api/carts/:id/items           controllers.CartController.addItem(id: Long)
+DELETE  /api/carts/:cartId/items/:itemId controllers.CartController.removeItem(cartId: Long, itemId: Long)
