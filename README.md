@@ -66,7 +66,7 @@ docker pull mikolajskalka/java-hello-world-app:latest
 ✅ 5.0 Należy dodać konfigurację CORS dla dwóch hostów dla metod CRUD [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/a12303009787a739c76e3a655036dd2b87968d74)
 
 **Kod:** [exercise2/](exercise2/)  
-**Demo:** [Link to video](#)
+**Demo:** [Link to video](https://youtu.be/bG1TK95_NV0)
 
 <details>
 <summary>Szczegóły</summary>
