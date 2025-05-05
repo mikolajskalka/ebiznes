@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine AS build
+FROM golang:1.24-alpine AS build
 
 WORKDIR /app
 
@@ -14,8 +14,8 @@ RUN go mod download
 # Copy source code
 COPY . .
 
-# Build the application with CGO enabled but let Docker determine the correct architecture
-RUN CGO_ENABLED=1 go build -o app .
+# Build the Go application - CGO is enabled for SQLite
+RUN CGO_ENABLED=1 go build -o main .
 
 # Create a minimal image for running the application
 FROM alpine:latest
@@ -26,7 +26,7 @@ WORKDIR /app
 RUN apk --no-cache add ca-certificates sqlite
 
 # Copy the binary from the build stage
-COPY --from=build /app/app .
+COPY --from=build /app/main .
 
 # Copy SQLite database file if it exists
 COPY --from=build /app/shop.db ./shop.db
@@ -35,4 +35,4 @@ COPY --from=build /app/shop.db ./shop.db
 EXPOSE 8080
 
 # Command to run the application
-CMD ["./app"]
+CMD ["./main"]
