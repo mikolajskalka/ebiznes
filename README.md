@@ -156,20 +156,6 @@ Po uruchomieniu, aplikacja będzie dostępna pod adresem http://localhost:8080 i
 
 ### Wymagania
 
-3.0 Należy stworzyć aplikację we frameworki echo w j. Go, która będzie
-miała kontroler Produktów zgodny z CRUD
-
-3.5 Należy stworzyć model Produktów wykorzystując gorm oraz
-wykorzystać model do obsługi produktów (CRUD) w kontrolerze (zamiast
-listy)
-
-4.0 Należy dodać model Koszyka oraz dodać odpowiedni endpoint
-
-4.5 Należy stworzyć model kategorii i dodać relację między kategorią,
-a produktem
-
-5.0 pogrupować zapytania w gorm’owe scope'y
-
 ✅ 3.0 Należy stworzyć aplikację we frameworki echo w j. Go, która będzie
 miała kontroler Produktów zgodny z CRUD [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
 
