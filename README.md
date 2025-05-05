@@ -156,15 +156,33 @@ Po uruchomieniu, aplikacja będzie dostępna pod adresem http://localhost:8080 i
 
 ### Wymagania
 
-✅ 3.0 Stworzenie aplikacji RESTowej w Go z użyciem frameworka Echo [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+3.0 Należy stworzyć aplikację we frameworki echo w j. Go, która będzie
+miała kontroler Produktów zgodny z CRUD
 
-✅ 3.5 Stworzenie modeli GORM (minimum 5) z relacjami między nimi [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+3.5 Należy stworzyć model Produktów wykorzystując gorm oraz
+wykorzystać model do obsługi produktów (CRUD) w kontrolerze (zamiast
+listy)
 
-✅ 4.0 Zaimplementowanie operacji CRUD dla modeli Product i Category [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+4.0 Należy dodać model Koszyka oraz dodać odpowiedni endpoint
 
-✅ 4.5 Dodatkowe endpointy z zastosowaniem GORM Scopes (filtrowanie, wyszukiwanie) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+4.5 Należy stworzyć model kategorii i dodać relację między kategorią,
+a produktem
 
-✅ 5.0 Implementacja obsługi koszyka (Cart) z relacjami [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+5.0 pogrupować zapytania w gorm’owe scope'y
+
+✅ 3.0 Należy stworzyć aplikację we frameworki echo w j. Go, która będzie
+miała kontroler Produktów zgodny z CRUD [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+✅ 3.5 Należy stworzyć model Produktów wykorzystując gorm oraz
+wykorzystać model do obsługi produktów (CRUD) w kontrolerze (zamiast
+listy) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+✅ 4.0 Należy dodać model Koszyka oraz dodać odpowiedni endpoint [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+✅ 4.5  Należy stworzyć model kategorii i dodać relację między kategorią,
+a produktem [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+✅ 5.0 pogrupować zapytania w gorm’owe scope'y [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
 
 **Kod:** [exercise4/](exercise4/)  
 **Demo:** [Link to video](https://youtu.be/wOU12Hf8l-w)
