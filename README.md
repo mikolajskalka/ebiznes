@@ -151,3 +151,96 @@ Po uruchomieniu, aplikacja będzie dostępna pod adresem http://localhost:8080 i
 - `GET /send-discord-message?channelId=<id>&message=<text>` - Wysłanie wiadomości na kanał Discord
 
 </details>
+
+## Zadanie 4: Go Echo
+
+### Wymagania
+
+✅ 3.0 Stworzenie aplikacji RESTowej w Go z użyciem frameworka Echo [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+✅ 3.5 Stworzenie modeli GORM (minimum 5) z relacjami między nimi [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+✅ 4.0 Zaimplementowanie operacji CRUD dla modeli Product i Category [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+✅ 4.5 Dodatkowe endpointy z zastosowaniem GORM Scopes (filtrowanie, wyszukiwanie) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+✅ 5.0 Implementacja obsługi koszyka (Cart) z relacjami [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/2dd839d575203ab418d1fddc5e3752796b60c3c3)
+
+**Kod:** [exercise4/](exercise4/)  
+**Demo:** [Link to video](https://youtu.be/wOU12Hf8l-w)
+
+<details>
+<summary>Szczegóły</summary>
+
+Aplikacja RESTowa zbudowana przy użyciu frameworka Echo w języku Go, wykorzystująca GORM do operacji bazodanowych oraz SQLite jako bazę danych.
+
+### Struktura projektu
+
+- **controllers/**: Zawiera handlery dla żądań HTTP
+- **database/**: Zarządza połączeniem i inicjalizacją bazy danych
+- **models/**: Definiuje modele danych z wykorzystaniem GORM
+- **routes/**: Konfiguruje ścieżki aplikacji
+
+### Modele
+
+Aplikacja zawiera 5 modeli z relacjami:
+1. **Product**: Główna encja produktu z funkcjonalnością CRUD
+2. **Category**: Powiązana z produktami (relacja jeden-do-wielu)
+3. **Cart**: Koszyk zakupowy dla użytkowników
+4. **CartItem**: Elementy w koszyku (powiązane z produktami)
+5. **User**: Użytkownik aplikacji, który posiada koszyki
+
+### Endpointy API
+
+#### Produkty
+- `GET /products` - Pobierz wszystkie produkty
+- `GET /products/:id` - Pobierz produkt po ID
+- `POST /products` - Utwórz nowy produkt
+- `PUT /products/:id` - Zaktualizuj istniejący produkt
+- `DELETE /products/:id` - Usuń produkt
+- `GET /products/category/:categoryId` - Pobierz produkty według kategorii
+- `GET /products/price-range?min=X&max=Y` - Pobierz produkty w zakresie cenowym
+
+#### Kategorie
+- `GET /categories` - Pobierz wszystkie kategorie
+- `GET /categories/with-products` - Pobierz wszystkie kategorie z ich produktami
+- `GET /categories/:id` - Pobierz kategorię po ID
+- `POST /categories` - Utwórz nową kategorię
+- `PUT /categories/:id` - Zaktualizuj istniejącą kategorię
+- `DELETE /categories/:id` - Usuń kategorię
+- `GET /categories/search?name=X` - Wyszukaj kategorie po nazwie
+
+#### Koszyki
+- `GET /carts` - Pobierz wszystkie koszyki
+- `GET /carts/:id` - Pobierz koszyk po ID
+- `POST /carts` - Utwórz nowy koszyk
+- `POST /carts/:id/items` - Dodaj element do koszyka
+- `DELETE /carts/:id/items/:itemId` - Usuń element z koszyka
+- `GET /carts/user/:userId` - Pobierz koszyki według ID użytkownika
+
+### GORM Scopes
+
+Aplikacja wykorzystuje GORM Scopes dla bardziej efektywnych zapytań do bazy danych:
+- Aktywne rekordy (nie usunięte)
+- Rekordy z załadowanymi powiązanymi encjami
+- Filtrowanie według różnych kryteriów (zakres cenowy, kategoria, itp.)
+
+### Uruchomienie aplikacji
+
+#### Za pomocą Go
+```bash
+# Instalacja zależności
+go mod download
+
+# Uruchomienie aplikacji
+go run main.go
+```
+
+#### Za pomocą Dockera
+```bash
+# Zbuduj i uruchom za pomocą Docker Compose
+docker-compose up --build
+```
+
+API będzie dostępne pod adresem http://localhost:8080
+</details>
