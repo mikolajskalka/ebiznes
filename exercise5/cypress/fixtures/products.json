@@ -1,0 +1,42 @@
+[
+  {
+    "ID": 1,
+    "name": "Smartphone XYZ",
+    "description": "Latest flagship smartphone with amazing features",
+    "price": 799.99,
+    "quantity": 25,
+    "categoryID": 1
+  },
+  {
+    "ID": 2,
+    "name": "Laptop Pro",
+    "description": "Powerful laptop for professionals",
+    "price": 1299.99,
+    "quantity": 10,
+    "categoryID": 1
+  },
+  {
+    "ID": 3,
+    "name": "Wireless Headphones",
+    "description": "Premium noise-cancelling headphones",
+    "price": 199.99,
+    "quantity": 30,
+    "categoryID": 2
+  },
+  {
+    "ID": 4,
+    "name": "Smart Watch",
+    "description": "Track your fitness and stay connected",
+    "price": 249.99,
+    "quantity": 15,
+    "categoryID": 2
+  },
+  {
+    "ID": 5,
+    "name": "Tablet Ultra",
+    "description": "Lightweight and powerful tablet",
+    "price": 499.99,
+    "quantity": 8,
+    "categoryID": 1
+  }
+]

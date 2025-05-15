@@ -1,0 +1,34 @@
+{
+  "ID": 1,
+  "userID": 1,
+  "items": [
+    {
+      "ID": 1,
+      "cartID": 1,
+      "productID": 1,
+      "quantity": 1,
+      "product": {
+        "ID": 1,
+        "name": "Smartphone XYZ",
+        "description": "Latest flagship smartphone with amazing features",
+        "price": 799.99,
+        "quantity": 25,
+        "categoryID": 1
+      }
+    },
+    {
+      "ID": 2,
+      "cartID": 1,
+      "productID": 3,
+      "quantity": 2,
+      "product": {
+        "ID": 3,
+        "name": "Wireless Headphones",
+        "description": "Premium noise-cancelling headphones",
+        "price": 199.99,
+        "quantity": 30,
+        "categoryID": 2
+      }
+    }
+  ]
+}
