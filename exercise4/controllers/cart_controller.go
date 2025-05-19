@@ -117,6 +117,9 @@ func AddItemToCart(c echo.Context) error {
 		})
 	}
 
+	// Load the product details for the newly created cart item
+	db.Model(&cartItem).Preload("Product").First(&cartItem)
+
 	// Update cart total price
 	var cartItems []models.CartItem
 	db.Where("cart_id = ?", cartID).Find(&cartItems)

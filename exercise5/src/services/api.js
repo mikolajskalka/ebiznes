@@ -39,7 +39,18 @@ export const cartService = {
     create: (cart) => apiClient.post('/carts', cart),
     addItem: (cartId, item) => apiClient.post(`/carts/${cartId}/items`, item),
     removeItem: (cartId, itemId) => apiClient.delete(`/carts/${cartId}/items/${itemId}`),
-    getByUser: (userId) => apiClient.get(`/carts/user/${userId}`),
+    getByUser: (userId) => {
+        console.log(`Fetching cart for user ${userId}`);
+        return apiClient.get(`/carts/user/${userId}`)
+            .then(response => {
+                console.log('Cart API response:', response.data);
+                return response;
+            })
+            .catch(error => {
+                console.error('Cart API error:', error);
+                throw error;
+            });
+    },
 };
 
 // Payment API service (mock since there's no actual payment endpoint in backend)

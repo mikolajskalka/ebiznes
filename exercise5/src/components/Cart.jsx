@@ -47,7 +47,11 @@ const Cart = () => {
                         <tbody>
                             {items.map((item, index) => (
                                 <tr key={item.ID || index}>
-                                    <td>{item.product ? item.product.name : `Product #${item.product_id}`}</td>
+                                    <td>
+                                        {/* Handle both normalized and raw API formats for product name */}
+                                        {item.product &&
+                                            (item.product.name || item.product.Name || `Product #${item.product_id}`)}
+                                    </td>
                                     <td>${item.price ? item.price.toFixed(2) : '0.00'}</td>
                                     <td>
                                         <div className="d-flex align-items-center">

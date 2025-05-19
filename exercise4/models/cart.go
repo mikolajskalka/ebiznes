@@ -17,7 +17,7 @@ func ActiveCarts(db *gorm.DB) *gorm.DB {
 }
 
 func WithCartItems(db *gorm.DB) *gorm.DB {
-	return db.Preload("Items")
+	return db.Preload("Items.Product").Preload("Items")
 }
 
 func ByUserID(userID uint) func(db *gorm.DB) *gorm.DB {
