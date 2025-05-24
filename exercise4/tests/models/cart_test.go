@@ -9,20 +9,26 @@ import (
 )
 
 func TestCartModel(t *testing.T) {
+	const (
+		userIDQuery     = "user_id = ?"
+		cartIDQuery     = "cart_id = ?"
+		testProductName = "Test Product for Cart"
+	)
+
 	// Initialize the test database
 	database.Initialize()
 	db := database.GetDB()
 
 	// Clean up any test data
-	db.Unscoped().Where("user_id = ?", 999).Delete(&models.Cart{})
-	db.Unscoped().Where("name = ?", "Test Product for Cart").Delete(&models.Product{})
+	db.Unscoped().Where(userIDQuery, 999).Delete(&models.Cart{})
+	db.Unscoped().Where("name = ?", testProductName).Delete(&models.Product{})
 
 	// Create a test user ID
 	testUserID := uint(999)
 
 	// Create a test product for our cart items
 	testProduct := models.Product{
-		Name:        "Test Product for Cart",
+		Name:        testProductName,
 		Description: "Test product for cart tests",
 		Price:       49.99,
 		Quantity:    100,
@@ -47,7 +53,7 @@ func TestCartModel(t *testing.T) {
 	// Test 2: Find a cart
 	var savedCart models.Cart
 	t.Run("Find Cart", func(t *testing.T) {
-		result := db.Where("user_id = ?", testUserID).First(&savedCart)
+		result := db.Where(userIDQuery, testUserID).First(&savedCart)
 		assert.Nil(t, result.Error)
 		assert.Equal(t, testUserID, savedCart.UserID)
 		assert.Equal(t, 0.0, savedCart.TotalPrice)
@@ -96,7 +102,7 @@ func TestCartModel(t *testing.T) {
 	t.Run("Update Cart Item Quantity", func(t *testing.T) {
 		// Get the cart item
 		var cartItem models.CartItem
-		db.Where("cart_id = ?", savedCart.ID).First(&cartItem)
+		db.Where(cartIDQuery, savedCart.ID).First(&cartItem)
 
 		// Update quantity
 		cartItem.Quantity = 5
@@ -104,7 +110,7 @@ func TestCartModel(t *testing.T) {
 
 		// Update cart total
 		var cartItems []models.CartItem
-		db.Where("cart_id = ?", savedCart.ID).Find(&cartItems)
+		db.Where(cartIDQuery, savedCart.ID).Find(&cartItems)
 
 		var totalPrice float64
 		for _, item := range cartItems {
@@ -124,7 +130,7 @@ func TestCartModel(t *testing.T) {
 	t.Run("Remove Cart Item", func(t *testing.T) {
 		// Get the cart item
 		var cartItem models.CartItem
-		db.Where("cart_id = ?", savedCart.ID).First(&cartItem)
+		db.Where(cartIDQuery, savedCart.ID).First(&cartItem)
 
 		// Delete cart item
 		db.Delete(&cartItem)
@@ -135,7 +141,7 @@ func TestCartModel(t *testing.T) {
 
 		// Verify cart item was removed
 		var count int64
-		db.Model(&models.CartItem{}).Where("cart_id = ? AND deleted_at IS NULL", savedCart.ID).Count(&count)
+		db.Model(&models.CartItem{}).Where(cartIDQuery+" AND deleted_at IS NULL", savedCart.ID).Count(&count)
 		assert.Equal(t, int64(0), count)
 
 		// Verify cart total was updated
@@ -158,7 +164,7 @@ func TestCartModel(t *testing.T) {
 
 		// Test ActiveCarts scope
 		var carts []models.Cart
-		db.Scopes(models.ActiveCarts).Where("user_id = ?", testUserID).Find(&carts)
+		db.Scopes(models.ActiveCarts).Where(userIDQuery, testUserID).Find(&carts)
 
 		// Should only find non-deleted carts (just 1)
 		assert.Equal(t, 1, len(carts))
@@ -203,6 +209,6 @@ func TestCartModel(t *testing.T) {
 	})
 
 	// Clean up all test data
-	db.Unscoped().Where("user_id = ?", testUserID).Delete(&models.Cart{})
-	db.Unscoped().Where("name = ?", "Test Product for Cart").Delete(&models.Product{})
+	db.Unscoped().Where(userIDQuery, testUserID).Delete(&models.Cart{})
+	db.Unscoped().Where("name = ?", testProductName).Delete(&models.Product{})
 }

@@ -9,13 +9,15 @@ import (
 )
 
 func TestCartItemModel(t *testing.T) {
+	const testProductName = "Test Product for CartItem"
+
 	// Initialize the test database
 	database.Initialize()
 	db := database.GetDB()
 
 	// Clean up any test data
 	db.Unscoped().Where("user_id = ?", 999).Delete(&models.Cart{})
-	db.Unscoped().Where("name = ?", "Test Product for CartItem").Delete(&models.Product{})
+	db.Unscoped().Where("name = ?", testProductName).Delete(&models.Product{})
 
 	// Set up test data
 	testUserID := uint(999)
@@ -29,7 +31,7 @@ func TestCartItemModel(t *testing.T) {
 
 	// Create a test product
 	testProduct := models.Product{
-		Name:        "Test Product for CartItem",
+		Name:        testProductName,
 		Description: "Test product for cart item tests",
 		Price:       29.99,
 		Quantity:    50,
@@ -171,7 +173,7 @@ func TestCartItemModel(t *testing.T) {
 
 		// Should have product information loaded
 		assert.Equal(t, testProduct.ID, loadedCartItem.Product.ID)
-		assert.Equal(t, "Test Product for CartItem", loadedCartItem.Product.Name)
+		assert.Equal(t, testProductName, loadedCartItem.Product.Name)
 		assert.Equal(t, 29.99, loadedCartItem.Product.Price)
 
 		// Clean up

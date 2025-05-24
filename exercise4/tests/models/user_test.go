@@ -9,6 +9,11 @@ import (
 )
 
 func TestUserModel(t *testing.T) {
+	const (
+		testEmail  = "test@example.com"
+		testEmail3 = "test3@example.com"
+	)
+
 	// Initialize the test database
 	database.Initialize()
 	db := database.GetDB()
@@ -21,14 +26,14 @@ func TestUserModel(t *testing.T) {
 	t.Run("Create User", func(t *testing.T) {
 		user := models.User{
 			Username: "testuser",
-			Email:    "test@example.com",
+			Email:    testEmail,
 		}
 
 		result := db.Create(&user)
 		assert.Nil(t, result.Error)
 		assert.NotZero(t, user.ID)
 		assert.Equal(t, "testuser", user.Username)
-		assert.Equal(t, "test@example.com", user.Email)
+		assert.Equal(t, testEmail, user.Email)
 
 		savedUser = user
 	})
@@ -40,7 +45,7 @@ func TestUserModel(t *testing.T) {
 		assert.Nil(t, result.Error)
 		assert.Equal(t, savedUser.ID, user.ID)
 		assert.Equal(t, "testuser", user.Username)
-		assert.Equal(t, "test@example.com", user.Email)
+		assert.Equal(t, testEmail, user.Email)
 	})
 
 	// Test 3: Update a user
@@ -125,7 +130,7 @@ func TestUserModel(t *testing.T) {
 		// Create users with different emails
 		user1 := models.User{
 			Username: "user1",
-			Email:    "test3@example.com",
+			Email:    testEmail3,
 		}
 		db.Create(&user1)
 
@@ -137,12 +142,12 @@ func TestUserModel(t *testing.T) {
 
 		// Test ByEmail scope
 		var users []models.User
-		db.Scopes(models.ByEmail("test3@example.com")).Find(&users)
+		db.Scopes(models.ByEmail(testEmail3)).Find(&users)
 
 		// Should only find users with the matching email
 		assert.Equal(t, 1, len(users))
 		if len(users) > 0 {
-			assert.Equal(t, "test3@example.com", users[0].Email)
+			assert.Equal(t, testEmail3, users[0].Email)
 		}
 
 		// Clean up

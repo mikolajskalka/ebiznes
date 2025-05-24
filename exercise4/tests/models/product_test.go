@@ -6,47 +6,89 @@ import (
 	"github.com/mikolajskalka/ebiznes/exercise4/database"
 	"github.com/mikolajskalka/ebiznes/exercise4/models"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 )
 
+func createTestProduct(t *testing.T, db *gorm.DB, name, description string, price float64, quantity int, categoryID uint) models.Product {
+	product := models.Product{
+		Name:        name,
+		Description: description,
+		Price:       price,
+		Quantity:    quantity,
+		CategoryID:  categoryID,
+	}
+	result := db.Create(&product)
+	assert.Nil(t, result.Error)
+	assert.NotZero(t, product.ID)
+	return product
+}
+
+func deleteTestProducts(db *gorm.DB, products ...models.Product) {
+	for _, product := range products {
+		db.Unscoped().Delete(&product)
+	}
+}
+
+func findProductByName(t *testing.T, db *gorm.DB, nameEqualQuery, name string) models.Product {
+	var product models.Product
+	result := db.Where(nameEqualQuery, name).First(&product)
+	assert.Nil(t, result.Error)
+	return product
+}
+
+func verifyProductFound(t *testing.T, products []models.Product, productMap map[string]bool) {
+	for _, p := range products {
+		if _, exists := productMap[p.Name]; exists {
+			productMap[p.Name] = true
+		}
+	}
+}
+
 func TestProductModel(t *testing.T) {
+	const (
+		testProductPattern = "Test Product%"
+		nameLikeQuery      = "name LIKE ?"
+		nameEqualQuery     = "name = ?"
+		testProduct1       = "Test Product 1"
+	)
+
 	// Initialize the test database
 	database.Initialize()
 	db := database.GetDB()
 
 	// Clean up any test products
-	db.Unscoped().Where("name LIKE ?", "Test Product%").Delete(&models.Product{})
+	db.Unscoped().Where(nameLikeQuery, testProductPattern).Delete(&models.Product{})
 
+	// Test basic CRUD operations
+	testBasicCRUD(t, db, nameEqualQuery, testProduct1)
+
+	// Test scopes
+	testActiveProductsScope(t, db, nameLikeQuery, testProductPattern)
+	testInStockScope(t, db, nameLikeQuery, testProductPattern)
+	testByCategoryIDScope(t, db, nameLikeQuery, testProductPattern)
+	testByPriceRangeScope(t, db, nameLikeQuery, testProductPattern)
+}
+
+// Test basic CRUD operations for Product model
+func testBasicCRUD(t *testing.T, db *gorm.DB, nameEqualQuery, testProduct1 string) {
 	// Test 1: Create a new product
 	t.Run("Create Product", func(t *testing.T) {
-		product := models.Product{
-			Name:        "Test Product 1",
-			Description: "Test Description 1",
-			Price:       99.99,
-			Quantity:    10,
-			CategoryID:  1,
-		}
-
-		result := db.Create(&product)
-		assert.Nil(t, result.Error)
-		assert.NotZero(t, product.ID)
-		assert.Equal(t, "Test Product 1", product.Name)
+		product := createTestProduct(t, db, testProduct1, "Test Description 1", 99.99, 10, 1)
+		assert.Equal(t, testProduct1, product.Name)
 		assert.Equal(t, 99.99, product.Price)
 	})
 
 	// Test 2: Find a product
 	t.Run("Find Product", func(t *testing.T) {
-		var product models.Product
-		result := db.Where("name = ?", "Test Product 1").First(&product)
-		assert.Nil(t, result.Error)
-		assert.Equal(t, "Test Product 1", product.Name)
+		product := findProductByName(t, db, nameEqualQuery, testProduct1)
+		assert.Equal(t, testProduct1, product.Name)
 		assert.Equal(t, "Test Description 1", product.Description)
 		assert.Equal(t, 99.99, product.Price)
 	})
 
 	// Test 3: Update a product
 	t.Run("Update Product", func(t *testing.T) {
-		var product models.Product
-		db.Where("name = ?", "Test Product 1").First(&product)
+		product := findProductByName(t, db, nameEqualQuery, testProduct1)
 
 		product.Price = 129.99
 		product.Description = "Updated Description"
@@ -54,229 +96,136 @@ func TestProductModel(t *testing.T) {
 		result := db.Save(&product)
 		assert.Nil(t, result.Error)
 
-		var updatedProduct models.Product
-		db.Where("name = ?", "Test Product 1").First(&updatedProduct)
+		updatedProduct := findProductByName(t, db, nameEqualQuery, testProduct1)
 		assert.Equal(t, 129.99, updatedProduct.Price)
 		assert.Equal(t, "Updated Description", updatedProduct.Description)
 	})
 
 	// Test 4: Delete a product (soft delete)
 	t.Run("Delete Product", func(t *testing.T) {
-		var product models.Product
-		db.Where("name = ?", "Test Product 1").First(&product)
+		product := findProductByName(t, db, nameEqualQuery, testProduct1)
 
 		result := db.Delete(&product)
 		assert.Nil(t, result.Error)
 
+		// Should not find the deleted product
 		var deletedProduct models.Product
-		result = db.Where("name = ?", "Test Product 1").First(&deletedProduct)
-		assert.Error(t, result.Error) // Should not find the deleted product
+		result = db.Where(nameEqualQuery, testProduct1).First(&deletedProduct)
+		assert.Error(t, result.Error)
 
-		// It should be found when using Unscoped (which includes soft-deleted records)
-		result = db.Unscoped().Where("name = ?", "Test Product 1").First(&deletedProduct)
+		// Should find with Unscoped
+		result = db.Unscoped().Where(nameEqualQuery, testProduct1).First(&deletedProduct)
 		assert.Nil(t, result.Error)
 		assert.NotNil(t, deletedProduct.DeletedAt.Time)
 	})
+}
 
-	// Test 5: Test ActiveProducts scope
+// Test ActiveProducts scope
+func testActiveProductsScope(t *testing.T, db *gorm.DB, nameLikeQuery, testProductPattern string) {
 	t.Run("ActiveProducts Scope", func(t *testing.T) {
-		// Create two products
-		product1 := models.Product{
-			Name:        "Test Product Active",
-			Description: "Active product",
-			Price:       19.99,
-			Quantity:    5,
-			CategoryID:  1,
-		}
-		db.Create(&product1)
-
-		product2 := models.Product{
-			Name:        "Test Product To Delete",
-			Description: "Will be deleted",
-			Price:       29.99,
-			Quantity:    3,
-			CategoryID:  1,
-		}
-		db.Create(&product2)
+		// Create test products
+		product1 := createTestProduct(t, db, "Test Product Active", "Active product", 19.99, 5, 1)
+		product2 := createTestProduct(t, db, "Test Product To Delete", "Will be deleted", 29.99, 3, 1)
 
 		// Delete one product
 		db.Delete(&product2)
 
 		// Test ActiveProducts scope
 		var products []models.Product
-		db.Scopes(models.ActiveProducts).Where("name LIKE ?", "Test Product%").Find(&products)
+		db.Scopes(models.ActiveProducts).Where(nameLikeQuery, testProductPattern).Find(&products)
 
-		// Should only find non-deleted products
-		activeFound := false
-		deletedFound := false
-
-		for _, p := range products {
-			if p.Name == "Test Product Active" {
-				activeFound = true
-			}
-			if p.Name == "Test Product To Delete" {
-				deletedFound = true
-			}
+		// Verify results using a map
+		productStatus := map[string]bool{
+			"Test Product Active":    false,
+			"Test Product To Delete": false,
 		}
+		verifyProductFound(t, products, productStatus)
 
-		assert.True(t, activeFound)
-		assert.False(t, deletedFound)
+		assert.True(t, productStatus["Test Product Active"])
+		assert.False(t, productStatus["Test Product To Delete"])
 
 		// Clean up
-		db.Unscoped().Delete(&product1)
-		db.Unscoped().Delete(&product2)
+		deleteTestProducts(db, product1, product2)
 	})
+}
 
-	// Test 6: Test InStock scope
+// Test InStock scope
+func testInStockScope(t *testing.T, db *gorm.DB, nameLikeQuery, testProductPattern string) {
 	t.Run("InStock Scope", func(t *testing.T) {
-		// Create products with different stock levels
-		product1 := models.Product{
-			Name:        "Test Product In Stock",
-			Description: "Has stock",
-			Price:       39.99,
-			Quantity:    10,
-			CategoryID:  1,
-		}
-		db.Create(&product1)
-
-		product2 := models.Product{
-			Name:        "Test Product Out of Stock",
-			Description: "No stock",
-			Price:       49.99,
-			Quantity:    0,
-			CategoryID:  1,
-		}
-		db.Create(&product2)
+		// Create test products
+		product1 := createTestProduct(t, db, "Test Product In Stock", "Has stock", 39.99, 10, 1)
+		product2 := createTestProduct(t, db, "Test Product Out of Stock", "No stock", 49.99, 0, 1)
 
 		// Test InStock scope
 		var products []models.Product
-		db.Scopes(models.InStock).Where("name LIKE ?", "Test Product%").Find(&products)
+		db.Scopes(models.InStock).Where(nameLikeQuery, testProductPattern).Find(&products)
 
-		// Should only find products with stock
-		inStockFound := false
-		outOfStockFound := false
-
-		for _, p := range products {
-			if p.Name == "Test Product In Stock" {
-				inStockFound = true
-			}
-			if p.Name == "Test Product Out of Stock" {
-				outOfStockFound = true
-			}
+		// Verify results
+		productStatus := map[string]bool{
+			"Test Product In Stock":     false,
+			"Test Product Out of Stock": false,
 		}
+		verifyProductFound(t, products, productStatus)
 
-		assert.True(t, inStockFound)
-		assert.False(t, outOfStockFound)
+		assert.True(t, productStatus["Test Product In Stock"])
+		assert.False(t, productStatus["Test Product Out of Stock"])
 
 		// Clean up
-		db.Unscoped().Delete(&product1)
-		db.Unscoped().Delete(&product2)
+		deleteTestProducts(db, product1, product2)
 	})
+}
 
-	// Test 7: Test ByCategoryID scope
+// Test ByCategoryID scope
+func testByCategoryIDScope(t *testing.T, db *gorm.DB, nameLikeQuery, testProductPattern string) {
 	t.Run("ByCategoryID Scope", func(t *testing.T) {
-		// Create products with different categories
-		product1 := models.Product{
-			Name:        "Test Product Cat 1",
-			Description: "Category 1",
-			Price:       59.99,
-			Quantity:    8,
-			CategoryID:  1,
-		}
-		db.Create(&product1)
-
-		product2 := models.Product{
-			Name:        "Test Product Cat 2",
-			Description: "Category 2",
-			Price:       69.99,
-			Quantity:    6,
-			CategoryID:  2,
-		}
-		db.Create(&product2)
+		// Create test products
+		product1 := createTestProduct(t, db, "Test Product Cat 1", "Category 1", 59.99, 8, 1)
+		product2 := createTestProduct(t, db, "Test Product Cat 2", "Category 2", 69.99, 6, 2)
 
 		// Test ByCategoryID scope
 		var products []models.Product
-		db.Scopes(models.ByCategoryID(1)).Where("name LIKE ?", "Test Product Cat%").Find(&products)
+		db.Scopes(models.ByCategoryID(1)).Where(nameLikeQuery, testProductPattern+" Cat%").Find(&products)
 
-		// Should only find products with CategoryID = 1
-		cat1Found := false
-		cat2Found := false
-
-		for _, p := range products {
-			if p.Name == "Test Product Cat 1" {
-				cat1Found = true
-			}
-			if p.Name == "Test Product Cat 2" {
-				cat2Found = true
-			}
+		// Verify results
+		productStatus := map[string]bool{
+			"Test Product Cat 1": false,
+			"Test Product Cat 2": false,
 		}
+		verifyProductFound(t, products, productStatus)
 
-		assert.True(t, cat1Found)
-		assert.False(t, cat2Found)
+		assert.True(t, productStatus["Test Product Cat 1"])
+		assert.False(t, productStatus["Test Product Cat 2"])
 
 		// Clean up
-		db.Unscoped().Delete(&product1)
-		db.Unscoped().Delete(&product2)
+		deleteTestProducts(db, product1, product2)
 	})
+}
 
-	// Test 8: Test ByPriceRange scope
+// Test ByPriceRange scope
+func testByPriceRangeScope(t *testing.T, db *gorm.DB, nameLikeQuery, testProductPattern string) {
 	t.Run("ByPriceRange Scope", func(t *testing.T) {
-		// Create products with different price ranges
-		product1 := models.Product{
-			Name:        "Test Product Low Price",
-			Description: "Low price range",
-			Price:       10.99,
-			Quantity:    5,
-			CategoryID:  1,
-		}
-		db.Create(&product1)
-
-		product2 := models.Product{
-			Name:        "Test Product Mid Price",
-			Description: "Medium price range",
-			Price:       50.99,
-			Quantity:    5,
-			CategoryID:  1,
-		}
-		db.Create(&product2)
-
-		product3 := models.Product{
-			Name:        "Test Product High Price",
-			Description: "High price range",
-			Price:       100.99,
-			Quantity:    5,
-			CategoryID:  1,
-		}
-		db.Create(&product3)
+		// Create test products with different price ranges
+		product1 := createTestProduct(t, db, "Test Product Low Price", "Low price range", 10.99, 5, 1)
+		product2 := createTestProduct(t, db, "Test Product Mid Price", "Medium price range", 50.99, 5, 1)
+		product3 := createTestProduct(t, db, "Test Product High Price", "High price range", 100.99, 5, 1)
 
 		// Test ByPriceRange scope (30-80)
 		var products []models.Product
-		db.Scopes(models.ByPriceRange(30.0, 80.0)).Where("name LIKE ?", "Test Product%").Find(&products)
+		db.Scopes(models.ByPriceRange(30.0, 80.0)).Where(nameLikeQuery, testProductPattern).Find(&products)
 
-		// Should only find products in the given price range
-		lowFound := false
-		midFound := false
-		highFound := false
-
-		for _, p := range products {
-			if p.Name == "Test Product Low Price" {
-				lowFound = true
-			}
-			if p.Name == "Test Product Mid Price" {
-				midFound = true
-			}
-			if p.Name == "Test Product High Price" {
-				highFound = true
-			}
+		// Verify results
+		productStatus := map[string]bool{
+			"Test Product Low Price":  false,
+			"Test Product Mid Price":  false,
+			"Test Product High Price": false,
 		}
+		verifyProductFound(t, products, productStatus)
 
-		assert.False(t, lowFound)
-		assert.True(t, midFound)
-		assert.False(t, highFound)
+		assert.False(t, productStatus["Test Product Low Price"])
+		assert.True(t, productStatus["Test Product Mid Price"])
+		assert.False(t, productStatus["Test Product High Price"])
 
 		// Clean up
-		db.Unscoped().Delete(&product1)
-		db.Unscoped().Delete(&product2)
-		db.Unscoped().Delete(&product3)
+		deleteTestProducts(db, product1, product2, product3)
 	})
 }
