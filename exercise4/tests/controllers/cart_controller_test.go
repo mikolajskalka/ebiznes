@@ -14,21 +14,26 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	userIDQuery     = "user_id = ?"
+	testProductName = "Test Cart Controller Product"
+)
+
 func TestCartController(t *testing.T) {
 	// Initialize the test database
 	database.Initialize()
 	db := database.GetDB()
 
 	// Clean up test data to ensure a fresh test environment
-	db.Unscoped().Where("user_id = ?", 999).Delete(&models.Cart{})
-	db.Unscoped().Where("name = ?", "Test Cart Controller Product").Delete(&models.Product{})
+	db.Unscoped().Where(userIDQuery, 999).Delete(&models.Cart{})
+	db.Unscoped().Where("name = ?", testProductName).Delete(&models.Product{})
 
 	// Create test user ID
 	testUserID := uint(999)
 
 	// Create a test product for our cart items
 	testProduct := models.Product{
-		Name:        "Test Cart Controller Product",
+		Name:        testProductName,
 		Description: "Test product for cart controller tests",
 		Price:       49.99,
 		Quantity:    100,
@@ -59,7 +64,7 @@ func TestCartController(t *testing.T) {
 
 		// Extract created cart ID for later tests
 		var cart models.Cart
-		db.Where("user_id = ?", testUserID).First(&cart)
+		db.Where(userIDQuery, testUserID).First(&cart)
 		savedCartID = cart.ID
 	})
 
@@ -170,6 +175,6 @@ func TestCartController(t *testing.T) {
 	})
 
 	// Clean up test data
-	db.Unscoped().Where("user_id = ?", testUserID).Delete(&models.Cart{})
-	db.Unscoped().Where("name = ?", "Test Cart Controller Product").Delete(&models.Product{})
+	db.Unscoped().Where(userIDQuery, testUserID).Delete(&models.Cart{})
+	db.Unscoped().Where("name = ?", testProductName).Delete(&models.Product{})
 }
