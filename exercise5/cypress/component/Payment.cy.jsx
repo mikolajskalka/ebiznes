@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 import React from 'react';
-import { mount } from '@cypress/react';
 import Payment from '../../src/components/Payment';
 import { CartProvider } from '../../src/context/CartContext';
 
@@ -55,26 +54,46 @@ describe('Payment Component Unit Tests', () => {
   });
 
   it('should display correct order summary', () => {
-    // Check order summary
+    // Load fixture and validate order summary
     cy.fixture('cart').then((cart) => {
-      // Calculate expected total
-      let expectedTotal = 0;
-      cart.items.forEach(item => {
-        expectedTotal += item.product.price * item.quantity;
-      });
-
-      // Check items in summary
-      cy.get('.order-summary').within(() => {
-        cart.items.forEach((item) => {
-          cy.contains(item.product.name).should('be.visible');
-          cy.contains('$' + (item.product.price * item.quantity).toFixed(2)).should('be.visible');
-        });
-
-        // Check total
-        cy.get('[data-testid="summary-total"]').should('contain', '$' + expectedTotal.toFixed(2));
-      });
+      validateOrderSummary(cart);
     });
   });
+  
+  // Helper function to validate order items and total outside of the test
+  function validateOrderSummary(cart) {
+    // Calculate expected total
+    let expectedTotal = calculateCartTotal(cart);
+    
+    // Validate each item in the summary
+    validateOrderItems(cart.items);
+    
+    // Check total separately
+    cy.get('.order-summary [data-testid="summary-total"]')
+      .should('contain', '$' + expectedTotal.toFixed(2));
+  }
+  
+  // Calculate the cart total
+  function calculateCartTotal(cart) {
+    return cart.items.reduce((total, item) => {
+      return total + (item.product.price * item.quantity);
+    }, 0);
+  }
+  
+  // Validate each order item in the summary
+  function validateOrderItems(items) {
+    cy.get('.order-summary').should('be.visible');
+    
+    items.forEach((item) => {
+      const itemTotal = (item.product.price * item.quantity).toFixed(2);
+      cy.get('.order-summary')
+        .contains(item.product.name)
+        .should('be.visible');
+      cy.get('.order-summary')
+        .contains('$' + itemTotal)
+        .should('be.visible');
+    });
+  }
 
   it('should validate required fields', () => {
     // Submit empty form

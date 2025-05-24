@@ -1,6 +1,5 @@
 /// <reference types="cypress" />
 import React from 'react';
-import { mount } from '@cypress/react';
 import Products from '../../src/components/Products';
 import { CartProvider } from '../../src/context/CartContext';
 
