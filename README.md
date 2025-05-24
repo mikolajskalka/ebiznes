@@ -344,10 +344,6 @@ Kompletny zestaw testów dla aplikacji frontend i backend, wykorzystujący Cypre
 - 50+ asercji w testach jednostkowych
 - Pełne pokrycie endpointów API z testami negatywnymi
 
-### Browserstack
-
-Testy funkcjonalne zostały skonfigurowane do uruchamiania na platformie Browserstack, umożliwiając testowanie na różnych przeglądarkach i urządzeniach.
-
 ### Uruchomienie testów
 
 #### Testy lokalne
@@ -359,9 +355,4 @@ npm run test:component   # Uruchomienie testów komponentów
 npm run test:api         # Uruchomienie testów API
 ```
 
-#### Testy na Browserstack
-```bash
-cd exercise6
-npm run test:browserstack
-```
 </details>
