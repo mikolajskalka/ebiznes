@@ -15,12 +15,12 @@ describe('API Tests', () => {
       cy.request('GET', 'http://localhost:8080/products').as('productsRequest');
       cy.get('@productsRequest').then((response) => {
         if (response.body.length === 0) return;
-        
+
         const productId = response.body[0].ID;
         // Store product ID as an alias
         cy.wrap(productId).as('productId');
       });
-      
+
       // Use the stored ID in a separate command chain
       cy.get('@productId').then((productId) => {
         cy.request('GET', `http://localhost:8080/products/${productId}`).then((productResponse) => {
@@ -44,11 +44,11 @@ describe('API Tests', () => {
       cy.get('@createProductRequest').then((response) => {
         expect(response.status).to.equal(201);
         expect(response.body).to.have.property('ID');
-        
+
         // Store product ID as an alias
         cy.wrap(response.body.ID).as('createdProductId');
       });
-      
+
       // Delete product in a separate command chain
       cy.get('@createdProductId').then((productId) => {
         cy.request('DELETE', `http://localhost:8080/products/${productId}`).then((deleteResponse) => {
@@ -72,11 +72,11 @@ describe('API Tests', () => {
       cy.request('GET', 'http://localhost:8080/categories').as('categoriesRequest');
       cy.get('@categoriesRequest').then((response) => {
         if (response.body.length === 0) return;
-        
+
         // Store category ID as an alias
         cy.wrap(response.body[0].ID).as('categoryId');
       });
-      
+
       // Use the stored ID in a separate command chain
       cy.get('@categoryId').then((categoryId) => {
         cy.request('GET', `http://localhost:8080/categories/${categoryId}`).then((categoryResponse) => {
@@ -111,11 +111,11 @@ describe('API Tests', () => {
       cy.request('GET', 'http://localhost:8080/products').as('productsForCartRequest');
       cy.get('@productsForCartRequest').then((productsResponse) => {
         if (productsResponse.body.length === 0) return;
-        
+
         // Store product ID as an alias
         cy.wrap(productsResponse.body[0].ID).as('productForCartId');
       });
-      
+
       // Add item to cart using the stored product ID
       cy.get('@productForCartId').then((productId) => {
         cy.request({

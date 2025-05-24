@@ -1,5 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { cartService, productService } from '../services/api';
+import PropTypes from 'prop-types';
 
 // Create a local storage key for storing product data
 const CACHED_PRODUCTS_KEY = 'cached_products_data';
@@ -191,8 +192,7 @@ export const CartProvider = ({ children }) => {
             console.log("Adding to cart:", cartItem);
 
             // Add item to cart in API
-            const response = await cartService.addItem(cart.ID, cartItem);
-            console.log("Add to cart response:", response.data);
+            await cartService.addItem(cart.ID, cartItem);
 
             // Update local state
             const updatedCart = await cartService.getById(cart.ID);
@@ -333,7 +333,8 @@ export const CartProvider = ({ children }) => {
         // Note: We're not clearing the cached products as they may be needed for future sessions
     };
 
-    const value = {
+    // Use useMemo to memoize the context value to prevent unnecessary renders
+    const value = useMemo(() => ({
         cart,
         items,
         totalPrice,
@@ -343,7 +344,11 @@ export const CartProvider = ({ children }) => {
         updateQuantity,
         clearCart,
         itemCount: items.length
-    };
+    }), [cart, items, totalPrice, loading]);
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+};
+
+CartProvider.propTypes = {
+    children: PropTypes.node.isRequired
 };

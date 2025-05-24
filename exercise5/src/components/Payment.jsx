@@ -146,7 +146,7 @@ const Payment = () => {
                     body: JSON.stringify(paymentData)
                 }).then(res => res.json())
                     .then(data => {
-                        if (data && data.success) {
+                        if (data?.success) {
                             setSuccess(true);
                             clearCart();
                             setTimeout(() => navigate('/'), 3000);
@@ -161,7 +161,7 @@ const Payment = () => {
                 // Process payment in real app
                 const response = await paymentService.processPayment(paymentData);
 
-                if (response && response.success) {
+                if (response?.success) {
                     setSuccess(true);
                     clearCart();
                     setTimeout(() => {
@@ -396,7 +396,7 @@ const Payment = () => {
                                         {items.map((item, index) => (
                                             <div key={item.ID || index} className="d-flex justify-content-between mb-2">
                                                 <span>
-                                                    {item.product ? item.product.name : `Product #${item.product_id}`} x {item.quantity}
+                                                    {item.product?.name || `Product #${item.product_id}`} x {item.quantity}
                                                 </span>
                                                 <span>${(item.price * item.quantity).toFixed(2)}</span>
                                             </div>
