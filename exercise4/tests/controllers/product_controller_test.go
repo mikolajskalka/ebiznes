@@ -14,6 +14,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	productPathFormat  = "/products/%d"
+	testProductNewName = "Test Controller Product New"
+)
+
 func setupEchoTest() (*echo.Echo, *httptest.ResponseRecorder) {
 	e := echo.New()
 	rec := httptest.NewRecorder()
@@ -89,7 +94,7 @@ func TestProductController(t *testing.T) {
 
 		// Setup test context
 		e, rec := setupEchoTest()
-		c := e.NewContext(httptest.NewRequest(http.MethodGet, fmt.Sprintf("/products/%d", savedProductID), nil), rec)
+		c := e.NewContext(httptest.NewRequest(http.MethodGet, fmt.Sprintf(productPathFormat, savedProductID), nil), rec)
 		c.SetParamNames("id")
 		c.SetParamValues(fmt.Sprintf("%d", savedProductID))
 
@@ -117,13 +122,13 @@ func TestProductController(t *testing.T) {
 
 	// Test 4: CreateProduct
 	t.Run("CreateProduct", func(t *testing.T) {
-		jsonBody := `{
-			"name": "Test Controller Product New",
+		jsonBody := fmt.Sprintf(`{
+			"name": "%s",
 			"description": "Test Description New",
 			"price": 299.99,
 			"quantity": 15,
 			"category_id": 1
-		}`
+		}`, testProductNewName)
 
 		e, rec := setupEchoTest()
 		req := httptest.NewRequest(http.MethodPost, "/products", strings.NewReader(jsonBody))
@@ -133,14 +138,14 @@ func TestProductController(t *testing.T) {
 		// Call controller function
 		if assert.NoError(t, controllers.CreateProduct(c)) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
-			assert.Contains(t, rec.Body.String(), "Test Controller Product New")
+			assert.Contains(t, rec.Body.String(), testProductNewName)
 			assert.Contains(t, rec.Body.String(), "299.99")
 		}
 
 		// Verify product was created in database
 		var product models.Product
-		db.Where("name = ?", "Test Controller Product New").First(&product)
-		assert.Equal(t, "Test Controller Product New", product.Name)
+		db.Where("name = ?", testProductNewName).First(&product)
+		assert.Equal(t, testProductNewName, product.Name)
 		assert.Equal(t, 299.99, product.Price)
 	})
 
@@ -165,7 +170,7 @@ func TestProductController(t *testing.T) {
 		}`
 
 		e, rec := setupEchoTest()
-		req := httptest.NewRequest(http.MethodPut, fmt.Sprintf("/products/%d", product.ID), strings.NewReader(jsonBody))
+		req := httptest.NewRequest(http.MethodPut, fmt.Sprintf(productPathFormat, product.ID), strings.NewReader(jsonBody))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		c := e.NewContext(req, rec)
 		c.SetParamNames("id")
@@ -201,7 +206,7 @@ func TestProductController(t *testing.T) {
 		db.Create(&product)
 
 		e, rec := setupEchoTest()
-		req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/products/%d", product.ID), nil)
+		req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf(productPathFormat, product.ID), nil)
 		c := e.NewContext(req, rec)
 		c.SetParamNames("id")
 		c.SetParamValues(fmt.Sprintf("%d", product.ID))
