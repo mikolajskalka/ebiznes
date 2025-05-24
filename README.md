@@ -1,5 +1,11 @@
 # E-Biznes
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=mikolajskalka_ebiznes&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=mikolajskalka_ebiznes)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mikolajskalka_ebiznes&metric=bugs)](https://sonarcloud.io/summary/new_code?id=mikolajskalka_ebiznes)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=mikolajskalka_ebiznes&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=mikolajskalka_ebiznes)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mikolajskalka_ebiznes&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=mikolajskalka_ebiznes)
+
+
 To repozytorium zawiera rozwiązania zadań, które zostały wyknane jako część kursu E-biznez na Uniwersytecie Jagiellońskim.
 
 ## Zadanie 1: Docker
@@ -14,7 +20,7 @@ To repozytorium zawiera rozwiązania zadań, które zostały wyknane jako częś
 
 ✅ 4.5 stworzyć przykład typu HelloWorld oraz uruchomienie aplikacji przez CMD oraz gradle [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
 
-✅ 5.0 dodać konfigurację docker-compose [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
+✅ 5.0 dodać konfigurację docker compose [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/38d83e5f86e7584c5ff8656dd642ae2a4bdecda8)
 
 **Kod:** [exercise1/](exercise1/)  
 **Demo:** [Link to video](https://youtu.be/iuURFd7Obcg)
@@ -243,8 +249,119 @@ go run main.go
 #### Za pomocą Dockera
 ```bash
 # Zbuduj i uruchom za pomocą Docker Compose
-docker-compose up --build
+docker compose up --build
 ```
 
 API będzie dostępne pod adresem http://localhost:8080
+</details>
+
+## Zadanie 5: Frontend React
+
+### Wymagania
+
+✅ 3.0 W ramach projektu należy stworzyć dwa komponenty: Produkty oraz Płatności; Płatności powinny wysyłać do aplikacji serwerowej dane, a w Produktach powinniśmy pobierać dane o produktach z aplikacji serwerowej [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/799eaa5c58a9b4abc9f8083ac95a0bc225ca1068)
+
+✅ 3.5 Należy dodać Koszyk wraz z widokiem; należy wykorzystać routing [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/799eaa5c58a9b4abc9f8083ac95a0bc225ca1068)
+
+✅ 4.0 Dane pomiędzy wszystkimi komponentami powinny być przesyłane za pomocą React hooks [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/799eaa5c58a9b4abc9f8083ac95a0bc225ca1068)
+
+✅ 4.5 Należy dodać skrypt uruchamiający aplikację serwerową oraz kliencką na dockerze via docker compose [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/asdasdasdasd)
+
+✅ 5.0 Należy wykorzystać axios'a oraz dodać nagłówki pod CORS [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/799eaa5c58a9b4abc9f8083ac95a0bc225ca1068)
+
+**Kod:** [exercise5/](exercise5/)  
+**Demo:** [Link to video](https://youtu.be/RnOisYnO8J0)
+
+<details>
+<summary>Szczegóły</summary>
+
+Aplikacja kliencka zbudowana z wykorzystaniem React.js, Vite i React Router, komunikująca się z API serwerowym.
+
+### Komponenty
+
+1. **Produkty** - Komponent wyświetlający wszystkie produkty z możliwością filtrowania po kategoriach, pobierający dane z API serwerowego
+2. **Koszyk** - Zarządzanie koszykiem zakupowym z możliwością dodawania, usuwania i aktualizowania ilości produktów
+3. **Płatności** - Formularz realizacji płatności, wysyłający dane do serwera
+
+### Technologie
+
+- React 18 z użyciem Hooks (useState, useEffect, useContext, useReducer)
+- React Router do nawigacji między komponentami
+- Axios do komunikacji z API
+- Vite jako narzędzie bundlujące
+- Context API do zarządzania globalnym stanem aplikacji
+
+### Uruchomienie aplikacji
+
+#### Lokalne uruchomienie
+```bash
+cd exercise5
+npm install
+npm run dev
+```
+
+#### Za pomocą Dockera
+```bash
+cd exercise5
+docker compose up --build
+```
+
+Aplikacja kliencka będzie dostępna pod adresem http://localhost:5173
+</details>
+
+## Zadanie 6: Testy
+
+### Wymagania
+
+✅ 3.0 Należy stworzyć 20 przypadków testowych w CypressJS lub Selenium [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/e26fa78f0349b774d827942fea45f51b62f612d6)
+
+✅ 3.5 Należy rozszerzyć testy funkcjonalne, aby zawierały minimum 50 asercji [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/e26fa78f0349b774d827942fea45f51b62f612d6)
+
+✅ 4.0 Należy stworzyć testy jednostkowe do wybranego wcześniejszego projektu z minimum 50 asercjami [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/e15490ae62d116c9845d151f6768c9b2afb2adff)
+
+✅ 4.5 Należy dodać testy API, należy pokryć wszystkie endpointy z minimum jednym scenariuszem negatywnym per endpoint [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/e26fa78f0349b774d827942fea45f51b62f612d6)
+
+❌ 5.0 Należy uruchomić testy funkcjonalne na Browserstacku
+
+**Kod:** [exercise6/](exercise6/)  
+**Demo:** [Link to video](https://youtu.be/your-video-id)
+
+<details>
+<summary>Szczegóły</summary>
+
+Kompletny zestaw testów dla aplikacji frontend i backend, wykorzystujący Cypress.
+
+### Rodzaje testów
+
+1. **Testy komponentów** - Testują poszczególne komponenty React w izolacji
+2. **Testy E2E** - Testują cały przepływ pracy użytkownika od początku do końca
+3. **Testy API** - Testują wszystkie endpointy API z uwzględnieniem scenariuszy pozytywnych i negatywnych
+
+### Statystyki testów
+
+- 20+ scenariuszy testowych
+- 50+ asercji w testach funkcjonalnych
+- 50+ asercji w testach jednostkowych
+- Pełne pokrycie endpointów API z testami negatywnymi
+
+### Browserstack
+
+Testy funkcjonalne zostały skonfigurowane do uruchamiania na platformie Browserstack, umożliwiając testowanie na różnych przeglądarkach i urządzeniach.
+
+### Uruchomienie testów
+
+#### Testy lokalne
+```bash
+cd exercise6
+npm install
+npm run test:e2e         # Uruchomienie testów E2E
+npm run test:component   # Uruchomienie testów komponentów
+npm run test:api         # Uruchomienie testów API
+```
+
+#### Testy na Browserstack
+```bash
+cd exercise6
+npm run test:browserstack
+```
 </details>
