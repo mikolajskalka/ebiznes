@@ -14,6 +14,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	categoryPathFormat  = "/categories/%d"
+	testCategoryNewName = "Test Controller Category New"
+)
+
 func TestCategoryController(t *testing.T) {
 	// Initialize the test database
 	database.Initialize()
@@ -64,7 +69,7 @@ func TestCategoryController(t *testing.T) {
 
 		// Setup test context
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/categories/%d", savedCategoryID), nil)
+		req := httptest.NewRequest(http.MethodGet, fmt.Sprintf(categoryPathFormat, savedCategoryID), nil)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 		c.SetParamNames("id")
@@ -80,10 +85,10 @@ func TestCategoryController(t *testing.T) {
 
 	// Test 3: CreateCategory
 	t.Run("CreateCategory", func(t *testing.T) {
-		jsonBody := `{
-			"name": "Test Controller Category New",
+		jsonBody := fmt.Sprintf(`{
+			"name": "%s",
 			"description": "Test Category Description New"
-		}`
+		}`, testCategoryNewName)
 
 		e := echo.New()
 		req := httptest.NewRequest(http.MethodPost, "/categories", strings.NewReader(jsonBody))
@@ -94,14 +99,14 @@ func TestCategoryController(t *testing.T) {
 		// Call controller function
 		if assert.NoError(t, controllers.CreateCategory(c)) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
-			assert.Contains(t, rec.Body.String(), "Test Controller Category New")
+			assert.Contains(t, rec.Body.String(), testCategoryNewName)
 			assert.Contains(t, rec.Body.String(), "Test Category Description New")
 		}
 
 		// Verify category was created in database
 		var category models.Category
-		db.Where("name = ?", "Test Controller Category New").First(&category)
-		assert.Equal(t, "Test Controller Category New", category.Name)
+		db.Where("name = ?", testCategoryNewName).First(&category)
+		assert.Equal(t, testCategoryNewName, category.Name)
 		assert.Equal(t, "Test Category Description New", category.Description)
 	})
 
@@ -120,7 +125,7 @@ func TestCategoryController(t *testing.T) {
 		}`
 
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodPut, fmt.Sprintf("/categories/%d", category.ID), strings.NewReader(jsonBody))
+		req := httptest.NewRequest(http.MethodPut, fmt.Sprintf(categoryPathFormat, category.ID), strings.NewReader(jsonBody))
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
@@ -151,7 +156,7 @@ func TestCategoryController(t *testing.T) {
 		db.Create(&category)
 
 		e := echo.New()
-		req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf("/categories/%d", category.ID), nil)
+		req := httptest.NewRequest(http.MethodDelete, fmt.Sprintf(categoryPathFormat, category.ID), nil)
 		rec := httptest.NewRecorder()
 		c := e.NewContext(req, rec)
 		c.SetParamNames("id")
