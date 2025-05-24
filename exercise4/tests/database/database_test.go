@@ -5,7 +5,31 @@ import (
 
 	"github.com/mikolajskalka/ebiznes/exercise4/database"
 	"github.com/stretchr/testify/assert"
+	"gorm.io/gorm"
 )
+
+// Helper function to verify required table columns
+func verifyTableColumns(t *testing.T, db *gorm.DB, tableName string, requiredColumns map[string]bool) {
+	// Query table info
+	type ColumnInfo struct {
+		Name string
+	}
+	var columns []ColumnInfo
+	result := db.Raw("PRAGMA table_info(" + tableName + ")").Scan(&columns)
+	assert.Nil(t, result.Error)
+
+	// Mark found columns
+	for _, column := range columns {
+		if _, exists := requiredColumns[column.Name]; exists {
+			requiredColumns[column.Name] = true
+		}
+	}
+
+	// Check if all required columns were found
+	for column, found := range requiredColumns {
+		assert.True(t, found, "Column "+column+" should exist in "+tableName+" table")
+	}
+}
 
 func TestDatabaseInitialization(t *testing.T) {
 	// Test 1: Database initialization
@@ -38,6 +62,7 @@ func TestDatabaseInitialization(t *testing.T) {
 		// They should be the same instance
 		assert.Equal(t, db1, db2)
 	})
+
 	// Test 3: Database tables are created
 	t.Run("Database Tables Created", func(t *testing.T) {
 		db := database.GetDB()
@@ -58,7 +83,7 @@ func TestDatabaseInitialization(t *testing.T) {
 		db := database.GetDB()
 
 		// Check required columns for products table
-		requiredColumns := map[string]bool{
+		productColumns := map[string]bool{
 			"id":          false,
 			"created_at":  false,
 			"updated_at":  false,
@@ -70,25 +95,7 @@ func TestDatabaseInitialization(t *testing.T) {
 			"category_id": false,
 		}
 
-		// Query table info
-		type ColumnInfo struct {
-			Name string
-		}
-		var columns []ColumnInfo
-		result := db.Raw("PRAGMA table_info(products)").Scan(&columns)
-		assert.Nil(t, result.Error)
-
-		// Mark found columns
-		for _, column := range columns {
-			if _, exists := requiredColumns[column.Name]; exists {
-				requiredColumns[column.Name] = true
-			}
-		}
-
-		// Check if all required columns were found
-		for column, found := range requiredColumns {
-			assert.True(t, found, "Column "+column+" should exist in products table")
-		}
+		verifyTableColumns(t, db, "products", productColumns)
 	})
 
 	// Test 5: Cart table has required columns
@@ -96,7 +103,7 @@ func TestDatabaseInitialization(t *testing.T) {
 		db := database.GetDB()
 
 		// Check required columns for carts table
-		requiredColumns := map[string]bool{
+		cartColumns := map[string]bool{
 			"id":          false,
 			"created_at":  false,
 			"updated_at":  false,
@@ -105,24 +112,6 @@ func TestDatabaseInitialization(t *testing.T) {
 			"total_price": false,
 		}
 
-		// Query table info
-		type ColumnInfo struct {
-			Name string
-		}
-		var columns []ColumnInfo
-		result := db.Raw("PRAGMA table_info(carts)").Scan(&columns)
-		assert.Nil(t, result.Error)
-
-		// Mark found columns
-		for _, column := range columns {
-			if _, exists := requiredColumns[column.Name]; exists {
-				requiredColumns[column.Name] = true
-			}
-		}
-
-		// Check if all required columns were found
-		for column, found := range requiredColumns {
-			assert.True(t, found, "Column "+column+" should exist in carts table")
-		}
+		verifyTableColumns(t, db, "carts", cartColumns)
 	})
 }
