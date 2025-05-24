@@ -14,8 +14,7 @@
     "test:e2e": "cypress run --e2e",
     "test:unit": "cypress run --component",
     "test": "npm run test:unit && npm run test:e2e",
-    "test:api": "cypress run --spec 'cypress/e2e/api.cy.js'",
-    "browserstack": "browserstack-cypress run"
+    "test:api": "cypress run --spec 'cypress/e2e/api.cy.js'"
   },
   "dependencies": {
     "axios": "^1.9.0",
@@ -30,7 +29,6 @@
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
-    "browserstack-cypress-cli": "^1.32.8",
     "cypress": "^14.3.2",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
