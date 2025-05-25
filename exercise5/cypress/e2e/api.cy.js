@@ -1,5 +1,42 @@
 /// <reference types="cypress" />
 
+Cypress.Commands.add('getFirstItemId', (response) => {
+  if (response.body.length === 0) return null;
+  return response.body[0].ID;
+});
+
+Cypress.Commands.add('verifyProductDetails', (productId) => {
+  cy.request('GET', `http://localhost:8080/products/${productId}`).then((productResponse) => {
+    expect(productResponse.status).to.equal(200);
+    expect(productResponse.body).to.have.property('ID', productId);
+  });
+});
+
+Cypress.Commands.add('verifyDeleteProduct', (productId) => {
+  cy.request('DELETE', `http://localhost:8080/products/${productId}`).then((deleteResponse) => {
+    expect(deleteResponse.status).to.equal(204);
+  });
+});
+
+Cypress.Commands.add('verifyCategoryDetails', (categoryId) => {
+  cy.request('GET', `http://localhost:8080/categories/${categoryId}`).then((categoryResponse) => {
+    expect(categoryResponse.status).to.equal(200);
+    expect(categoryResponse.body).to.have.property('ID', categoryId);
+  });
+});
+
+Cypress.Commands.add('addItemToCart', (cartId, productId) => {
+  return cy.request({
+    method: 'POST',
+    url: `http://localhost:8080/carts/${cartId}/items`,
+    body: {
+      productID: productId,
+      quantity: 1
+    },
+    failOnStatusCode: false
+  });
+});
+
 describe('API Tests', () => {
   // Product API tests
   describe('Product API', () => {
@@ -11,23 +48,12 @@ describe('API Tests', () => {
     });
 
     it('should get a single product', () => {
-      // First get all products to find an ID, then use an alias
-      cy.request('GET', 'http://localhost:8080/products').as('productsRequest');
-      cy.get('@productsRequest').then((response) => {
-        if (response.body.length === 0) return;
-
-        const productId = response.body[0].ID;
-        // Store product ID as an alias
-        cy.wrap(productId).as('productId');
-      });
-
-      // Use the stored ID in a separate command chain
-      cy.get('@productId').then((productId) => {
-        cy.request('GET', `http://localhost:8080/products/${productId}`).then((productResponse) => {
-          expect(productResponse.status).to.equal(200);
-          expect(productResponse.body).to.have.property('ID', productId);
+      // First get all products to find an ID
+      cy.request('GET', 'http://localhost:8080/products')
+        .then(response => cy.getFirstItemId(response))
+        .then(productId => {
+          if (productId) cy.verifyProductDetails(productId);
         });
-      });
     });
 
     it('should create and delete a product', () => {
@@ -39,22 +65,14 @@ describe('API Tests', () => {
         categoryID: 1
       };
 
-      // Create product and store the ID
-      cy.request('POST', 'http://localhost:8080/products', newProduct).as('createProductRequest');
-      cy.get('@createProductRequest').then((response) => {
-        expect(response.status).to.equal(201);
-        expect(response.body).to.have.property('ID');
-
-        // Store product ID as an alias
-        cy.wrap(response.body.ID).as('createdProductId');
-      });
-
-      // Delete product in a separate command chain
-      cy.get('@createdProductId').then((productId) => {
-        cy.request('DELETE', `http://localhost:8080/products/${productId}`).then((deleteResponse) => {
-          expect(deleteResponse.status).to.equal(204);
-        });
-      });
+      // Create product and verify/delete in sequence
+      cy.request('POST', 'http://localhost:8080/products', newProduct)
+        .then(response => {
+          expect(response.status).to.equal(201);
+          expect(response.body).to.have.property('ID');
+          return response.body.ID;
+        })
+        .then(productId => cy.verifyDeleteProduct(productId));
     });
   });
 
@@ -68,22 +86,11 @@ describe('API Tests', () => {
     });
 
     it('should get a single category', () => {
-      // First get all categories to find an ID
-      cy.request('GET', 'http://localhost:8080/categories').as('categoriesRequest');
-      cy.get('@categoriesRequest').then((response) => {
-        if (response.body.length === 0) return;
-
-        // Store category ID as an alias
-        cy.wrap(response.body[0].ID).as('categoryId');
-      });
-
-      // Use the stored ID in a separate command chain
-      cy.get('@categoryId').then((categoryId) => {
-        cy.request('GET', `http://localhost:8080/categories/${categoryId}`).then((categoryResponse) => {
-          expect(categoryResponse.status).to.equal(200);
-          expect(categoryResponse.body).to.have.property('ID', categoryId);
+      cy.request('GET', 'http://localhost:8080/categories')
+        .then(response => cy.getFirstItemId(response))
+        .then(categoryId => {
+          if (categoryId) cy.verifyCategoryDetails(categoryId);
         });
-      });
     });
   });
 
@@ -93,10 +100,11 @@ describe('API Tests', () => {
 
     beforeEach(() => {
       // Create a cart for testing
-      cy.request('POST', 'http://localhost:8080/carts', { userID: 1 }).then((response) => {
-        expect(response.status).to.equal(201);
-        cartId = response.body.ID;
-      });
+      cy.request('POST', 'http://localhost:8080/carts', { userID: 1 })
+        .then(response => {
+          expect(response.status).to.equal(201);
+          cartId = response.body.ID;
+        });
     });
 
     it('should get a cart', () => {
@@ -107,29 +115,18 @@ describe('API Tests', () => {
     });
 
     it('should add an item to cart and handle errors', () => {
-      // Get products first and store the result
-      cy.request('GET', 'http://localhost:8080/products').as('productsForCartRequest');
-      cy.get('@productsForCartRequest').then((productsResponse) => {
-        if (productsResponse.body.length === 0) return;
-
-        // Store product ID as an alias
-        cy.wrap(productsResponse.body[0].ID).as('productForCartId');
-      });
-
-      // Add item to cart using the stored product ID
-      cy.get('@productForCartId').then((productId) => {
-        cy.request({
-          method: 'POST',
-          url: `http://localhost:8080/carts/${cartId}/items`,
-          body: {
-            productID: productId,
-            quantity: 1
-          },
-          failOnStatusCode: false
-        }).then((response) => {
-          cy.log(`Response status: ${response.status}`);
+      // First get a product ID
+      cy.request('GET', 'http://localhost:8080/products')
+        .then(response => cy.getFirstItemId(response))
+        .then(productId => {
+          if (productId) {
+            // Add item to cart
+            cy.addItemToCart(cartId, productId)
+              .then(response => {
+                cy.log(`Response status: ${response.status}`);
+              });
+          }
         });
-      });
     });
   });
 });

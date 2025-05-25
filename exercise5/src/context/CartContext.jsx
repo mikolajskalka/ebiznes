@@ -40,16 +40,16 @@ export const CartProvider = ({ children }) => {
                 // Check if user already has a cart
                 const response = await cartService.getByUser(1);
 
-                if (response.data && response.data.length > 0) {
+                if (response.data?.length > 0) {
                     // User has a cart
                     const userCart = response.data[0];
                     setCart(userCart);
 
                     // Make sure all cart items have product information loaded
-                    const cartItems = userCart.items || [];
+                    const cartItems = userCart?.items || [];
                     const enhancedItems = await enhanceCartItemsWithProductData(cartItems);
                     setItems(enhancedItems);
-                    setTotalPrice(userCart.total_price || 0);
+                    setTotalPrice(userCart?.total_price || 0);
                 } else {
                     // Create a new cart for the user
                     const newCartResponse = await cartService.create({
@@ -63,7 +63,7 @@ export const CartProvider = ({ children }) => {
             } catch (error) {
                 console.error('Failed to initialize cart:', error);
                 // If API fails, create a local cart
-                setCart({ id: 'local-cart', user_id: 1 });
+                setCart({ ID: 'local-cart', user_id: 1 });
                 setItems([]);
                 setTotalPrice(0);
             } finally {
@@ -76,7 +76,7 @@ export const CartProvider = ({ children }) => {
 
     // Function to cache a product locally
     const cacheProduct = (product) => {
-        if (!product || !product.ID) return;
+        if (!product?.ID) return;
 
         try {
             const newCachedProducts = {
@@ -110,17 +110,17 @@ export const CartProvider = ({ children }) => {
             };
 
             // Check if product data exists in any format (backend sends nested product object)
-            if (item.product && (item.product.name || item.product.Name)) {
+            if (item.product?.name || item.product?.Name) {
                 console.log("Item has product data from backend:", item.product);
 
                 // Normalize the product data
                 normalizedItem.product = {
                     ID: item.product.ID,
-                    name: item.product.name || item.product.Name,
-                    description: item.product.description || item.product.Description,
-                    price: item.product.price || item.product.Price,
-                    quantity: item.product.quantity || item.product.Quantity,
-                    category_id: item.product.category_id || item.product.CategoryID
+                    name: item.product?.name || item.product?.Name,
+                    description: item.product?.description || item.product?.Description,
+                    price: item.product?.price || item.product?.Price,
+                    quantity: item.product?.quantity || item.product?.Quantity,
+                    category_id: item.product?.category_id || item.product?.CategoryID
                 };
 
                 // Cache the normalized product for future use
@@ -143,11 +143,11 @@ export const CartProvider = ({ children }) => {
                     // Normalize the product data from API
                     const apiProduct = {
                         ID: productResponse.data.ID,
-                        name: productResponse.data.name || productResponse.data.Name,
-                        description: productResponse.data.description || productResponse.data.Description,
-                        price: productResponse.data.price || productResponse.data.Price,
-                        quantity: productResponse.data.quantity || productResponse.data.Quantity,
-                        category_id: productResponse.data.category_id || productResponse.data.CategoryID
+                        name: productResponse.data?.name || productResponse.data?.Name,
+                        description: productResponse.data?.description || productResponse.data?.Description,
+                        price: productResponse.data?.price || productResponse.data?.Price,
+                        quantity: productResponse.data?.quantity || productResponse.data?.Quantity,
+                        category_id: productResponse.data?.category_id || productResponse.data?.CategoryID
                     };
 
                     // Cache the product for future use
@@ -167,17 +167,17 @@ export const CartProvider = ({ children }) => {
 
     // Add item to cart
     const addToCart = async (product, quantity = 1) => {
-        if (!cart) return;
+        if (!cart?.ID) return;
 
         // Always cache the product whenever we add it to cart
         // Normalize the product before caching
         const normalizedProduct = {
             ID: product.ID,
-            name: product.name || product.Name,
-            description: product.description || product.Description,
-            price: product.price || product.Price,
-            quantity: product.quantity || product.Quantity,
-            category_id: product.category_id || product.CategoryID
+            name: product?.name || product?.Name,
+            description: product?.description || product?.Description,
+            price: product?.price || product?.Price,
+            quantity: product?.quantity || product?.Quantity,
+            category_id: product?.category_id || product?.CategoryID
         };
         cacheProduct(normalizedProduct);
 
@@ -199,16 +199,16 @@ export const CartProvider = ({ children }) => {
             console.log("Updated cart response:", updatedCart.data);
 
             // Enhance cart items with product data
-            const updatedItems = await enhanceCartItemsWithProductData(updatedCart.data.items || []);
+            const updatedItems = await enhanceCartItemsWithProductData(updatedCart.data?.items || []);
 
             setCart(updatedCart.data);
             setItems(updatedItems);
-            setTotalPrice(updatedCart.data.total_price || 0);
+            setTotalPrice(updatedCart.data?.total_price || 0);
         } catch (error) {
             console.error('Failed to add item to cart:', error);
 
             // Fallback to local cart if API call fails
-            const existingItemIndex = items.findIndex(item => item.product_id === product.ID);
+            const existingItemIndex = items.findIndex(item => item?.product_id === product.ID);
 
             if (existingItemIndex >= 0) {
                 // Update existing item
@@ -227,7 +227,7 @@ export const CartProvider = ({ children }) => {
             }
 
             // Update total price
-            const newTotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const newTotal = items.reduce((sum, item) => sum + ((item?.price || 0) * (item?.quantity || 0)), 0);
             setTotalPrice(newTotal);
         } finally {
             setLoading(false);
@@ -236,7 +236,7 @@ export const CartProvider = ({ children }) => {
 
     // Update item quantity in cart
     const updateQuantity = async (itemId, newQuantity) => {
-        if (!cart || newQuantity < 1) return;
+        if (!cart?.ID || newQuantity < 1) return;
 
         setLoading(true);
         try {
@@ -263,7 +263,7 @@ export const CartProvider = ({ children }) => {
             setItems(updatedItems);
 
             // Update total price
-            const newTotal = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const newTotal = updatedItems.reduce((sum, item) => sum + ((item?.price || 0) * (item?.quantity || 0)), 0);
             setTotalPrice(newTotal);
         } catch (error) {
             console.error('Failed to update item quantity:', error);
@@ -274,7 +274,7 @@ export const CartProvider = ({ children }) => {
 
     // Remove item from cart
     const removeFromCart = async (itemId) => {
-        if (!cart) return;
+        if (!cart?.ID) return;
 
         setLoading(true);
         try {
@@ -296,7 +296,7 @@ export const CartProvider = ({ children }) => {
             setItems(updatedItems);
 
             // Calculate new total price
-            const newTotal = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const newTotal = updatedItems.reduce((sum, item) => sum + ((item?.price || 0) * (item?.quantity || 0)), 0);
             setTotalPrice(newTotal);
 
             if (!window.Cypress) {
@@ -305,10 +305,10 @@ export const CartProvider = ({ children }) => {
                 setCart(updatedCart.data);
 
                 // Enhance items with product data
-                const updatedApiItems = await enhanceCartItemsWithProductData(updatedCart.data.items || []);
+                const updatedApiItems = await enhanceCartItemsWithProductData(updatedCart.data?.items || []);
 
                 setItems(updatedApiItems);
-                setTotalPrice(updatedCart.data.total_price || 0);
+                setTotalPrice(updatedCart.data?.total_price || 0);
             }
         } catch (error) {
             console.error('Failed to remove item from cart:', error);
@@ -318,7 +318,7 @@ export const CartProvider = ({ children }) => {
             setItems(updatedItems);
 
             // Update total price
-            const newTotal = updatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const newTotal = updatedItems.reduce((sum, item) => sum + ((item?.price || 0) * (item?.quantity || 0)), 0);
             setTotalPrice(newTotal);
         } finally {
             setLoading(false);
