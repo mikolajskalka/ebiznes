@@ -9,6 +9,12 @@ import (
 	"github.com/mikolajskalka/ebiznes/exercise4/models"
 )
 
+// Error messages
+const (
+	ErrorInvalidCategoryID = "Invalid category ID"
+	ErrorCategoryNotFound  = "Category not found"
+)
+
 // GetAllCategories - Get all categories
 func GetAllCategories(c echo.Context) error {
 	var categories []models.Category
@@ -46,7 +52,7 @@ func GetCategory(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid category ID",
+			"error": ErrorInvalidCategoryID,
 		})
 	}
 
@@ -56,7 +62,7 @@ func GetCategory(c echo.Context) error {
 
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Category not found",
+			"error": ErrorCategoryNotFound,
 		})
 	}
 
@@ -88,7 +94,7 @@ func UpdateCategory(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid category ID",
+			"error": ErrorInvalidCategoryID,
 		})
 	}
 
@@ -98,7 +104,7 @@ func UpdateCategory(c echo.Context) error {
 	result := db.First(&existingCategory, id)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Category not found",
+			"error": ErrorCategoryNotFound,
 		})
 	}
 
@@ -124,7 +130,7 @@ func DeleteCategory(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid category ID",
+			"error": ErrorInvalidCategoryID,
 		})
 	}
 
@@ -134,7 +140,7 @@ func DeleteCategory(c echo.Context) error {
 	result := db.First(&category, id)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Category not found",
+			"error": ErrorCategoryNotFound,
 		})
 	}
 

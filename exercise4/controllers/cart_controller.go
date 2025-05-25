@@ -9,6 +9,12 @@ import (
 	"github.com/mikolajskalka/ebiznes/exercise4/models"
 )
 
+// Error messages
+const (
+	ErrorInvalidCartID = "Invalid cart ID"
+	ErrorCartNotFound  = "Cart not found"
+)
+
 // GetAllCarts - Get all carts
 func GetAllCarts(c echo.Context) error {
 	var carts []models.Cart
@@ -30,7 +36,7 @@ func GetCart(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid cart ID",
+			"error": ErrorInvalidCartID,
 		})
 	}
 
@@ -40,7 +46,7 @@ func GetCart(c echo.Context) error {
 
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Cart not found",
+			"error": ErrorCartNotFound,
 		})
 	}
 
@@ -72,7 +78,7 @@ func AddItemToCart(c echo.Context) error {
 	cartID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid cart ID",
+			"error": ErrorInvalidCartID,
 		})
 	}
 
@@ -82,7 +88,7 @@ func AddItemToCart(c echo.Context) error {
 	result := db.First(&cart, cartID)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Cart not found",
+			"error": ErrorCartNotFound,
 		})
 	}
 
@@ -102,7 +108,7 @@ func AddItemToCart(c echo.Context) error {
 	result = db.First(&product, cartItem.ProductID)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Product not found",
+			"error": "Product not found", // Note: should use ErrorProductNotFound constant from product_controller.go
 		})
 	}
 
@@ -140,7 +146,7 @@ func RemoveItemFromCart(c echo.Context) error {
 	cartID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid cart ID",
+			"error": ErrorInvalidCartID,
 		})
 	}
 
@@ -157,7 +163,7 @@ func RemoveItemFromCart(c echo.Context) error {
 	result := db.First(&cart, cartID)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Cart not found",
+			"error": ErrorCartNotFound,
 		})
 	}
 

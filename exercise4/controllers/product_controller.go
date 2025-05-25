@@ -9,6 +9,13 @@ import (
 	"github.com/mikolajskalka/ebiznes/exercise4/models"
 )
 
+// Error messages
+const (
+	ErrorInvalidProductID       = "Invalid product ID"
+	ErrorProductNotFound        = "Product not found"
+	ErrorFailedRetrieveProducts = "Failed to retrieve products"
+)
+
 // GetAllProducts - Get all products
 func GetAllProducts(c echo.Context) error {
 	var products []models.Product
@@ -18,7 +25,7 @@ func GetAllProducts(c echo.Context) error {
 
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": "Failed to retrieve products",
+			"error": ErrorFailedRetrieveProducts,
 		})
 	}
 
@@ -30,7 +37,7 @@ func GetProduct(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid product ID",
+			"error": ErrorInvalidProductID,
 		})
 	}
 
@@ -40,7 +47,7 @@ func GetProduct(c echo.Context) error {
 
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Product not found",
+			"error": ErrorProductNotFound,
 		})
 	}
 
@@ -72,7 +79,7 @@ func UpdateProduct(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid product ID",
+			"error": ErrorInvalidProductID,
 		})
 	}
 
@@ -82,7 +89,7 @@ func UpdateProduct(c echo.Context) error {
 	result := db.First(&existingProduct, id)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Product not found",
+			"error": ErrorProductNotFound,
 		})
 	}
 
@@ -111,7 +118,7 @@ func DeleteProduct(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid product ID",
+			"error": ErrorInvalidProductID,
 		})
 	}
 
@@ -121,7 +128,7 @@ func DeleteProduct(c echo.Context) error {
 	result := db.First(&product, id)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{
-			"error": "Product not found",
+			"error": ErrorProductNotFound,
 		})
 	}
 
@@ -136,7 +143,7 @@ func GetProductsByCategory(c echo.Context) error {
 	categoryID, err := strconv.Atoi(c.Param("categoryId"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
-			"error": "Invalid category ID",
+			"error": "Invalid category ID", // Note: should use ErrorInvalidCategoryID constant from category_controller.go
 		})
 	}
 
@@ -146,7 +153,7 @@ func GetProductsByCategory(c echo.Context) error {
 
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": "Failed to retrieve products",
+			"error": ErrorFailedRetrieveProducts,
 		})
 	}
 
@@ -174,7 +181,7 @@ func GetProductsByPriceRange(c echo.Context) error {
 
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"error": "Failed to retrieve products",
+			"error": ErrorFailedRetrieveProducts,
 		})
 	}
 
