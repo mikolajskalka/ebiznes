@@ -23,11 +23,13 @@ RUN npm install --ignore-scripts && npm install --ignore-scripts react-bootstrap
 COPY --chown=nodeuser:nodegroup vite.config.js index.html cypress.config.js eslint.config.js ./
 COPY --chown=nodeuser:nodegroup public/ ./public/
 COPY --chown=nodeuser:nodegroup src/ ./src/
-# Explicitly exclude test files, logs and other non-essential files
 
-# Set read-only permissions for all copied files to ensure security
-RUN find /app -type f -exec chmod 444 {} \; && \
-    find /app -type d -exec chmod 555 {} \;
+# Set read-only permissions for application files to ensure security
+RUN find /app/src -type f -exec chmod 444 {} \; && \
+    find /app/src -type d -exec chmod 555 {} \; && \
+    find /app/public -type f -exec chmod 444 {} \; && \
+    find /app/public -type d -exec chmod 555 {} \; && \
+    chmod 444 /app/vite.config.js /app/index.html /app/cypress.config.js /app/eslint.config.js
 
 EXPOSE 5173
 

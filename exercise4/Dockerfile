@@ -38,17 +38,15 @@ RUN addgroup -S appgroup && adduser -S -G appgroup appuser
 COPY --from=build /app/main .
 COPY --from=build /app/seed_db .
 
-# Create a database directory with proper permissions
+# Create a database directory, set permissions, and seed the database
 RUN mkdir -p /app/data && \
     touch /app/data/shop.db && \
     chown -R appuser:appgroup /app && \
     chmod +x /app/main && \
     chmod +x /app/seed_db && \
     chmod 644 /app/data/shop.db && \
-    chmod 755 /app/data
-
-# Run the seed script to pre-populate the database (as root before switching to appuser)
-RUN ./seed_db && \
+    chmod 755 /app/data && \
+    ./seed_db && \
     chown appuser:appgroup /app/data/shop.db
 
 # Expose port 8080
