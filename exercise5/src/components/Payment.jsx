@@ -51,7 +51,7 @@ const Payment = () => {
 
         if (!paymentDetails.email.trim()) {
             newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(paymentDetails.email)) {
+        } else if (!/^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,63}$/i.test(paymentDetails.email)) {
             newErrors.email = 'Please enter a valid email address';
         }
 
