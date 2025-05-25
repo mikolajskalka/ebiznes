@@ -24,7 +24,7 @@ RUN CGO_ENABLED=1 go build -o main . && \
     CGO_ENABLED=1 go build -o seed_db ./scripts/seed_products.go
 
 # Create a minimal image for running the application
-FROM alpine:latest
+FROM alpine:3.21.3
 
 WORKDIR /app
 
@@ -48,7 +48,7 @@ RUN mkdir -p /app/data && \
     chmod 755 /app/data
 
 # Run the seed script to pre-populate the database (as root before switching to appuser)
-RUN cd /app && ./seed_db && \
+RUN ./seed_db && \
     chown appuser:appgroup /app/data/shop.db
 
 # Expose port 8080

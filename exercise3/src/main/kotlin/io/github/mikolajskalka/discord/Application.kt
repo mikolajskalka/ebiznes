@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 /**
  * Main application class that starts the Ktor server and Discord bot
  */
-fun main(args: Array<String>) {
+fun main() {
     // Get Discord token from environment variable or use a placeholder
     val discordToken = System.getenv("DISCORD_TOKEN") ?: "discord_token"
     

@@ -16,14 +16,18 @@ RUN mkdir -p /home/nodeuser/.npm && \
 # Switch to non-root user for package installation
 USER nodeuser
 
-# Install all dependencies, including react-bootstrap
-RUN npm install && npm install react-bootstrap bootstrap
+# Install all dependencies with --ignore-scripts for security
+RUN npm install --ignore-scripts && npm install --ignore-scripts react-bootstrap bootstrap
 
 # Copy only necessary files for the application
 COPY --chown=nodeuser:nodegroup vite.config.js index.html cypress.config.js eslint.config.js ./
 COPY --chown=nodeuser:nodegroup public/ ./public/
 COPY --chown=nodeuser:nodegroup src/ ./src/
 # Explicitly exclude test files, logs and other non-essential files
+
+# Set read-only permissions for all copied files to ensure security
+RUN find /app -type f -exec chmod 444 {} \; && \
+    find /app -type d -exec chmod 555 {} \;
 
 EXPOSE 5173
 

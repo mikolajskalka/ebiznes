@@ -4,7 +4,7 @@ FROM ubuntu:24.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Update and install basic utilities
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     curl \
     software-properties-common \
@@ -14,12 +14,12 @@ RUN apt-get update && apt-get install -y \
 
 # Install Java 8
 RUN apt-get update && \
-    apt-get install -y openjdk-8-jdk && \
+    apt-get install -y --no-install-recommends openjdk-8-jdk && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python 3.10
 RUN apt-get update && \
-    apt-get install -y python3.10 python3-pip && \
+    apt-get install -y --no-install-recommends python3.10 python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
 # Install Kotlin using SDKMAN
