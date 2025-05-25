@@ -37,6 +37,16 @@ Cypress.Commands.add('addItemToCart', (cartId, productId) => {
   });
 });
 
+Cypress.Commands.add('getProductAndAddToCart', (cartId) => {
+  return cy.request('GET', 'http://localhost:8080/products')
+    .then(response => {
+      const productId = response.body.length > 0 ? response.body[0].ID : null;
+      if (!productId) return null;
+
+      return cy.addItemToCart(cartId, productId);
+    });
+});
+
 describe('API Tests', () => {
   // Product API tests
   describe('Product API', () => {
@@ -115,16 +125,11 @@ describe('API Tests', () => {
     });
 
     it('should add an item to cart and handle errors', () => {
-      // First get a product ID
-      cy.request('GET', 'http://localhost:8080/products')
-        .then(response => cy.getFirstItemId(response))
-        .then(productId => {
-          if (productId) {
-            // Add item to cart
-            cy.addItemToCart(cartId, productId)
-              .then(response => {
-                cy.log(`Response status: ${response.status}`);
-              });
+      // Get product and add to cart in a flattened way
+      cy.getProductAndAddToCart(cartId)
+        .then(response => {
+          if (response) {
+            cy.log(`Response status: ${response.status}`);
           }
         });
     });

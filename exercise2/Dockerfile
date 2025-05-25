@@ -25,12 +25,10 @@ RUN groupadd -r appuser && useradd -r -g appuser -m appuser
 # Copy the built application
 COPY --from=builder /app/target/universal/stage /app
 
-# Copy the startup script
+# Copy the startup script and set proper permissions
 COPY startup.sh /app/
-RUN chmod +x /app/startup.sh
-
-# Set proper permissions
-RUN chown -R appuser:appuser /app
+RUN chmod +x /app/startup.sh && \
+    chown -R appuser:appuser /app
 
 # Expose the application port
 EXPOSE 9000

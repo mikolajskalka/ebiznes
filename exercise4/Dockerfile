@@ -28,11 +28,9 @@ FROM alpine:3.21.3
 
 WORKDIR /app
 
-# Install runtime dependencies for SQLite
-RUN apk --no-cache add ca-certificates sqlite
-
-# Create a non-root user to run the application
-RUN addgroup -S appgroup && adduser -S -G appgroup appuser
+# Install runtime dependencies, create user, and prepare environment
+RUN apk --no-cache add ca-certificates sqlite && \
+    addgroup -S appgroup && adduser -S -G appgroup appuser
 
 # Copy the binaries from the build stage
 COPY --from=build /app/main .
