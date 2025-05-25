@@ -1,5 +1,13 @@
+// Define versions as extra properties
+val kotlinVersion by extra("1.9.21")
+val ktorVersion by extra("2.3.7")
+val logbackVersion by extra("1.4.11")
+val jdaVersion by extra("5.0.0-beta.18")
+val serializationVersion by extra("1.6.0") 
+val coroutinesVersion by extra("1.7.3")
+
 plugins {
-    kotlin("jvm") version "1.9.21"
+    kotlin("jvm") version "1.9.21" 
     kotlin("plugin.serialization") version "1.9.21"
     application
 }
@@ -13,33 +21,33 @@ repositories {
 
 dependencies {
     // Kotlin standard library
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     
     // Ktor server dependencies
-    implementation("io.ktor:ktor-server-core:2.3.7")
-    implementation("io.ktor:ktor-server-netty:2.3.7")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
     
     // Ktor client dependencies
-    implementation("io.ktor:ktor-client-core:2.3.7")
-    implementation("io.ktor:ktor-client-cio:2.3.7")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.7")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     
     // Logging
-    implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
     
     // Discord API (JDA)
-    implementation("net.dv8tion:JDA:5.0.0-beta.18")
+    implementation("net.dv8tion:JDA:$jdaVersion")
     
     // Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
     
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
 
     // Tests
-    testImplementation("io.ktor:ktor-server-test-host:2.3.7")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.21")
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 }
 
 application {
