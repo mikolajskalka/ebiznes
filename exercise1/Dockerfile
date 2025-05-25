@@ -49,8 +49,18 @@ RUN java -version && \
 # Set working directory
 WORKDIR /app
 
-# Copy the project files
-COPY . /app
+# Create a non-root user
+RUN groupadd -r appuser && useradd -r -g appuser -m appuser
+
+# Copy only necessary project files
+COPY build.gradle /app/
+COPY src/ /app/src/
+
+# Set proper permissions
+RUN chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
 
 # Set the entry point to run the application with Gradle
 ENTRYPOINT ["gradle", "run"]

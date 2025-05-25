@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"os"
 
 	"github.com/mikolajskalka/ebiznes/exercise4/models"
 	"gorm.io/driver/sqlite"
@@ -13,7 +14,12 @@ var DB *gorm.DB
 // Initialize database connection and migrate models
 func Initialize() {
 	var err error
-	DB, err = gorm.Open(sqlite.Open("shop.db"), &gorm.Config{})
+	// Check if the data directory exists, if so use that path
+	dbPath := "shop.db"
+	if _, err := os.Stat("/app/data"); err == nil {
+		dbPath = "/app/data/shop.db"
+	}
+	DB, err = gorm.Open(sqlite.Open(dbPath), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}

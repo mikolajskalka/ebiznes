@@ -11,11 +11,17 @@ COPY go.mod go.sum ./
 # Download dependencies
 RUN go mod download
 
-# Copy source code
-COPY . .
+# Copy only necessary source code files
+COPY main.go ./
+COPY controllers/ ./controllers/
+COPY database/ ./database/
+COPY models/ ./models/
+COPY routes/ ./routes/
+COPY scripts/ ./scripts/
 
-# Build the Go application - CGO is enabled for SQLite
-RUN CGO_ENABLED=1 go build -o main .
+# Build the Go application and seed script - CGO is enabled for SQLite
+RUN CGO_ENABLED=1 go build -o main . && \
+    CGO_ENABLED=1 go build -o seed_db ./scripts/seed_products.go
 
 # Create a minimal image for running the application
 FROM alpine:latest
@@ -25,14 +31,34 @@ WORKDIR /app
 # Install runtime dependencies for SQLite
 RUN apk --no-cache add ca-certificates sqlite
 
-# Copy the binary from the build stage
-COPY --from=build /app/main .
+# Create a non-root user to run the application
+RUN addgroup -S appgroup && adduser -S -G appgroup appuser
 
-# Copy SQLite database file if it exists
-COPY --from=build /app/shop.db ./shop.db
+# Copy the binaries from the build stage
+COPY --from=build /app/main .
+COPY --from=build /app/seed_db .
+
+# Create a database directory with proper permissions
+RUN mkdir -p /app/data && \
+    touch /app/data/shop.db && \
+    chown -R appuser:appgroup /app && \
+    chmod +x /app/main && \
+    chmod +x /app/seed_db && \
+    chmod 644 /app/data/shop.db && \
+    chmod 755 /app/data
+
+# Run the seed script to pre-populate the database (as root before switching to appuser)
+RUN cd /app && ./seed_db && \
+    chown appuser:appgroup /app/data/shop.db
 
 # Expose port 8080
 EXPOSE 8080
+
+# Create a data directory for the SQLite database
+VOLUME /app/data
+
+# Switch to non-root user
+USER appuser
 
 # Command to run the application
 CMD ["./main"]

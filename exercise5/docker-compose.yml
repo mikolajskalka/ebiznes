@@ -4,6 +4,8 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+    volumes:
+      - db_data:/app/data
 
   frontend:
     build: .
@@ -17,3 +19,6 @@ services:
     restart: unless-stopped
     environment:
       - VITE_API_URL=http://localhost:8080
+
+volumes:
+  db_data:
