@@ -26,5 +26,7 @@ func main() {
 
 	// Start server
 	log.Println("Starting server on :8080")
-	e.Start(":8080")
+	if err := e.Start(":8080"); err != nil {
+		log.Fatal(err)
+	}
 }
