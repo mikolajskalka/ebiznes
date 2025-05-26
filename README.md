@@ -356,3 +356,63 @@ npm run test:api         # Uruchomienie testów API
 ```
 
 </details>
+
+## Zadanie 7: Sonar
+
+### Wymagania
+
+✅ 3.0 Należy dodać lintera do odpowiedniego kodu aplikacji serwerowej w hookach gita [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/cd70f1f754feecb65f176796f7b721a57b3ffaba)
+
+✅ 3.5 Należy wyeliminować wszystkie bugi w kodzie w Sonarze (kod aplikacji serwerowej) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/ecf0b299ec422ce4ee4160109131c9bb0e2251e1)
+
+✅ 4.0 Należy wyeliminować wszystkie zapaszki w kodzie w Sonarze (kod aplikacji serwerowej) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/ecf0b299ec422ce4ee4160109131c9bb0e2251e1)
+
+✅ 4.5 Należy wyeliminować wszystkie podatności oraz błędy bezpieczeństwa w kodzie w Sonarze (kod aplikacji serwerowej) [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/ecf0b299ec422ce4ee4160109131c9bb0e2251e1)
+
+✅ 5.0 Należy wyeliminować wszystkie błędy oraz zapaszki w kodzie aplikacji klienckiej [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/ecf0b299ec422ce4ee4160109131c9bb0e2251e1)
+
+**Kod:** [exercise7/](exercise7/)  
+**Demo:** [Link to video](https://youtu.be/your-video-id)
+
+<details>
+<summary>Szczegóły</summary>
+
+Integracja analizy kodu z SonarCloud dla aplikacji serwerowej i klienckiej, wraz z poprawkami wszystkich znalezionych problemów.
+
+### Konfiguracja Sonara
+
+- Dodane projekty aplikacji serwerowej i klienckiej do SonarCloud
+- Skonfigurowane automatyczne skanowanie kodu przy każdym push do repozytorium
+- Dodane git hooki dla lint-staged do sprawdzania kodu przed commitem
+
+### Konfiguracja Go Lintera
+
+Dla kodu w Go (exercise4) skonfigurowano linter golangci-lint jako git hook:
+
+#### Instalacja i konfiguracja
+
+```bash
+# Instalacja golangci-lint
+./exercise7/scripts/install-golangci-lint.sh
+
+# Konfiguracja git hooks
+./exercise7/scripts/setup-git-hooks.sh
+```
+
+#### Uruchamianie lintera manualnie
+
+```bash
+# Uruchomienie lintera dla kodu Go
+./exercise7/scripts/lint-go.sh
+
+# Uruchomienie lintera z automtycznym naprawianiem problemów
+./exercise7/scripts/lint-go.sh --fix
+```
+
+#### Wybrane reguły lintowania
+
+- **gofmt** - Sprawdzanie formatowania kodu
+- **goimports** - Sprawdzanie organizacji importów
+- **govet** - Raportowanie podejrzanych konstrukcji
+- **errcheck** - Wykrywanie nieobsługiwanych błędów
+- **staticcheck** - Statyczna analiza kodu
