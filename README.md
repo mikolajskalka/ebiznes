@@ -324,7 +324,7 @@ Aplikacja kliencka będzie dostępna pod adresem http://localhost:5173
 ❌ 5.0 Należy uruchomić testy funkcjonalne na Browserstacku
 
 **Kod:** [exercise6/](exercise6/)  
-**Demo:** [Link to video](https://youtu.be/your-video-id)
+**Demo:** [Link to video](https://youtu.be/8rq_GwxJX60)
 
 <details>
 <summary>Szczegóły</summary>
@@ -372,7 +372,7 @@ npm run test:api         # Uruchomienie testów API
 ✅ 5.0 Należy wyeliminować wszystkie błędy oraz zapaszki w kodzie aplikacji klienckiej [Link do commita](https://github.com/mikolajskalka/ebiznes/commit/ecf0b299ec422ce4ee4160109131c9bb0e2251e1)
 
 **Kod:** [exercise7/](exercise7/)  
-**Demo:** [Link to video](https://youtu.be/your-video-id)
+**Demo:** [Link to video](https://youtu.be/d8EQqWu7oGU)
 
 <details>
 <summary>Szczegóły</summary>
@@ -383,31 +383,6 @@ Integracja analizy kodu z SonarCloud dla aplikacji serwerowej i klienckiej, wraz
 
 - Dodane projekty aplikacji serwerowej i klienckiej do SonarCloud
 - Skonfigurowane automatyczne skanowanie kodu przy każdym push do repozytorium
-- Dodane git hooki dla lint-staged do sprawdzania kodu przed commitem
-
-### Konfiguracja Go Lintera
-
-Dla kodu w Go (exercise4) skonfigurowano linter golangci-lint jako git hook:
-
-#### Instalacja i konfiguracja
-
-```bash
-# Instalacja golangci-lint
-./exercise7/scripts/install-golangci-lint.sh
-
-# Konfiguracja git hooks
-./exercise7/scripts/setup-git-hooks.sh
-```
-
-#### Uruchamianie lintera manualnie
-
-```bash
-# Uruchomienie lintera dla kodu Go
-./exercise7/scripts/lint-go.sh
-
-# Uruchomienie lintera z automtycznym naprawianiem problemów
-./exercise7/scripts/lint-go.sh --fix
-```
 
 #### Wybrane reguły lintowania
 
